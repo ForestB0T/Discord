@@ -69,7 +69,7 @@ export default class ForestBot extends Client {
     
         const rest: REST = new REST({ version: '9' }).setToken(this.token);
         const botID = this.user.id
-        await rest.put(Routes.applicationGuildCommands(botID, "814728510307434497"), { body: [] }).catch(console.error);
+        cnf.load_guild_commands && await rest.put(Routes.applicationGuildCommands(botID, "814728510307434497"), { body: client.commands }).catch(console.error);
         cnf.load_commands && await rest.put(Routes.applicationCommands(botID), { body: client.commands }).catch(console.error);
 
     }
