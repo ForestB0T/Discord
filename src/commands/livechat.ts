@@ -1,7 +1,7 @@
 import { CommandInteraction, Message } from 'discord.js';
 import type ForestBot                  from '../structure/discord/Client';
 import { db }                          from "../index.js";
-import { getNameFromDomain }           from '../utils/checkString';
+import { getNameFromDomain }           from '../utils/checkString.js';
 
 export default {
     permissions: "MANAGE_SERVER",
