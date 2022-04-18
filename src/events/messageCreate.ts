@@ -16,7 +16,7 @@ export default {
         if (content.startsWith(prefix + "tab")) {
             if (!args[0]) return;
             const server = args[0];
-            return channel.send(makeTablistEmbed(server, args[0]));
+            return channel.send(makeTablistEmbed(server, server+"_refresh"));
         }
 
 

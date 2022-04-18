@@ -1,6 +1,7 @@
 import { CommandInteraction, Message } from 'discord.js';
 import type ForestBot                  from '../structure/discord/Client';
 import { db }                          from "../index.js";
+import { getNameFromDomain }           from '../utils/checkString';
 
 export default {
     permissions: "MANAGE_SERVER",
@@ -47,12 +48,14 @@ export default {
     },
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
 
-        const mcserver   = interaction.options.getString("mcserver");
+        let mcserver   = interaction.options.getString("mcserver");
         const channel    = interaction.options.getChannel("channel");
         const user       = interaction.user.username;
         const guild_id   = interaction.guild.id;
         const guild_name = interaction.guild.name;
         const subCommand = interaction.options.getSubcommand();
+
+        mcserver = getNameFromDomain(mcserver);
 
         const addLivechat = async () => {
             if (channel.type !== "GUILD_TEXT") {
@@ -69,9 +72,16 @@ export default {
                     [guild_id]
                 );
 
+                if (res["channelID"] === channel.id) { 
+                    return interaction.reply({
+                        content: "> The channel you specified is already a livechat channel.",
+                        ephemeral: true
+                    })
+                }
+
                 if (res["mc_server"] === mcserver) {
                     return interaction.reply({
-                        content: "> A livechat is already setup for this server.",
+                        content: "> A livechat is already setup for this minecraft server.",
                         ephemeral: true
                     })
                 }
@@ -127,7 +137,6 @@ export default {
         switch (subCommand) {
             case "add":
                 return addLivechat();
-
 
             case "remove":
                 return removeLivechat();

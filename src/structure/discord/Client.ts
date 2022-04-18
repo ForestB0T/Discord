@@ -3,7 +3,7 @@ import { Routes }             from "discord-api-types/v9";
 import { Collection, Client } from "discord.js";
 import { lstatSync }          from "fs";
 import { readdir }            from "fs/promises";
-import { cnf, db }            from '../../index.js';
+import { client, cnf, db }            from '../../index.js';
 import path                   from "path";
 import ErrorHandler           from "./ErrorHandler.js";
 import { fileURLToPath }      from 'node:url';
@@ -69,8 +69,8 @@ export default class ForestBot extends Client {
     
         const rest: REST = new REST({ version: '9' }).setToken(this.token);
         const botID = this.user.id
-        await rest.put(Routes.applicationGuildCommands(botID, "938572591944314911"), { body: this.commands }).catch(console.error);
-        cnf.load_commands && await rest.put(Routes.applicationCommands(botID), { body: this.commands }).catch(console.error);
+        await rest.put(Routes.applicationGuildCommands(botID, "814728510307434497"), { body: [] }).catch(console.error);
+        cnf.load_commands && await rest.put(Routes.applicationCommands(botID), { body: client.commands }).catch(console.error);
 
     }
 

@@ -1,4 +1,5 @@
 import { CommandInteraction } from 'discord.js';
+import { getNameFromDomain } from '../utils/checkString.js';
 import type ForestBot         from '../structure/discord/Client';
 import { db }                 from "../index.js";
 
@@ -27,11 +28,13 @@ export default {
     },
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
 
-        const mcserver   = interaction.options.getString("mcserver");
+        let mcserver   = interaction.options.getString("mcserver");
         const channel    = interaction.options.getChannel("channel");
         const user       = interaction.user.username;
         const guild_id   = interaction.guild.id;
         const guild_name = interaction.guild.name;
+
+        mcserver = getNameFromDomain(mcserver); 
 
         if (channel && channel.type !== "GUILD_TEXT") {
             return interaction.reply({

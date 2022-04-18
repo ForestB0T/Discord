@@ -1,4 +1,4 @@
 {
-    "load_commands": false,
+    "load_commands": true,
     "apiUrl": "https://forestbot.org"
 }
