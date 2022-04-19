@@ -29,10 +29,10 @@ export default async function commandHandler(interaction: CommandInteraction, cl
     if (permissions) {
         if (typeof permissions === "string") permissions = [permissions];
         for (const perm of permissions) {
-            if (!member.guild.me.permissions.has(perm) && perm !== "ADMINISTRATOR") {
-                client.ErrorHandler.noBotPermission(interaction, perm);
-                return
-            }
+            // if (!member.guild.me.permissions.has(perm) && perm !== "ADMINISTRATOR") {
+            //     client.ErrorHandler.noBotPermission(interaction, perm);
+            //     return
+            // }
 
             if (!member.permissions.has(perm)) {
                 client.ErrorHandler.noUserPermission(interaction, perm);
