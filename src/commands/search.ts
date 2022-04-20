@@ -80,7 +80,7 @@ export default {
                 },
                 {
                     name: 'Last Seen',
-                    value: `${data.lastseen}`,
+                    value: `${lastseenString}`,
                     inline: false
                 },
                 {
