@@ -2,6 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import { color } from '../index.js';
 import { dhms } from '../utils/time/dhms.js';
 import fetchData from '../fuctions/fetch.js';
+import { convertUnixTimestamp } from '../utils/time/convert.js';
 import type ForestBot from '../structure/discord/Client';
 
 export default {
@@ -46,6 +47,14 @@ export default {
                 content: `> Could not find user: **${userToSearch}**`,
                 ephemeral: true
             })
+        }
+        
+        let lastseenString: string;
+
+        if (/^\d+$/.test(data.lastseen)) {
+            lastseenString = convertUnixTimestamp(parseInt(data.lastseen));
+        } else {
+            lastseenString = data.lastseen;
         }
 
         const statsEmbed: {} = {
