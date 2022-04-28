@@ -4,7 +4,7 @@ import type ForestBot         from '../structure/discord/Client';
 import { db }                 from "../index.js";
 
 export default {
-    permissions: "MANAGE_SERVER",
+    permissions: "MANAGE_GUILD",
     channel_strict: false,
     requires_setup: false,
     data: {

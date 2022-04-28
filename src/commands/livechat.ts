@@ -4,7 +4,7 @@ import { db }                          from "../index.js";
 import { getNameFromDomain }           from '../utils/checkString.js';
 
 export default {
-    permissions: "MANAGE_SERVER",
+    permissions: "MANAGE_GUILD",
     channel_strict: false,
     requires_setup: false,
     data: {
@@ -55,7 +55,9 @@ export default {
         const guild_name = interaction.guild.name;
         const subCommand = interaction.options.getSubcommand();
 
-        mcserver = getNameFromDomain(mcserver);
+        if (mcserver) {
+            mcserver = getNameFromDomain(mcserver);
+        }
 
         const addLivechat = async () => {
             if (channel.type !== "GUILD_TEXT") {
