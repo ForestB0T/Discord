@@ -42,7 +42,7 @@ export default {
 
         const quoteEmbed: {} = {
             color: color.Emerald,
-            description: `> **${data.name}** » ${data.message}`,
+            description: `> **${userToSearch}** » ${data.message}`,
         }
 
         return await interaction.editReply({
