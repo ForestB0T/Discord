@@ -43,6 +43,7 @@ export default {
                     > **channel** - the channel you want the livechat to work in 
                     **Removing a livechat**
                     > **channel** - the channel you want to remove the livechat from
+                    > **Note:** Livechats are limited to the servers that I am currently in.
                     `,
                     inline: false
                 },

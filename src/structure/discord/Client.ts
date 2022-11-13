@@ -20,7 +20,7 @@ export default class ForestBot extends Client {
     constructor(options: Options["discord"]) {
         super(options);
         this.ErrorHandler      = new ErrorHandler()
-        this.token             = process.env.token
+        this.token             = process.env.prod == "true" ? process.env.TOKEN : process.env.TESTTOKEN
         this.commandCollection = new Collection();
         this.commands          = [];
         this.on("ready", async () => {

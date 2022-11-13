@@ -1,9 +1,11 @@
 import { CommandInteraction } from 'discord.js';
 import { color } from '../index.js';
 import { dhms } from '../utils/time/dhms.js';
+import { timeAgoStr } from '../utils/time/convert.js';
 import fetchData from '../fuctions/fetch.js';
 import { convertUnixTimestamp } from '../utils/time/convert.js';
 import type ForestBot from '../structure/discord/Client';
+
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -35,9 +37,10 @@ export default {
             joindate:  string,
             uuid:      string,
             playtime:  number,
-            lastdeath: string,
+            lastdeathString: string,
+            lastdeathTime:  number,
             mc_server: string
-            error:     string
+            error?:     string
         }
 
         let data = await fetchData(`${client.apiUrl}/user/${userToSearch}/${thisGuild.mc_server}`) as User;
@@ -51,8 +54,10 @@ export default {
         
         let lastseenString: string;
 
+        let lastdeath: string = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
+
         if (/^\d+$/.test(data.lastseen)) {
-            lastseenString = convertUnixTimestamp(parseInt(data.lastseen));
+            lastseenString = `${convertUnixTimestamp(parseInt(data.lastseen))}, (${timeAgoStr(parseInt(data.lastseen))})`;
         } else {
             lastseenString = data.lastseen;
         }
@@ -60,7 +65,7 @@ export default {
         const statsEmbed: {} = {
             color: color.gray,
             title: `${userToSearch}`,
-            description: `Server: ${data.mc_server}`,
+            description: `Server: ${thisGuild.mc_server}`,
             url: `https://namemc.com/profile/${userToSearch}.2`,
 
             thumbnail: {
@@ -81,6 +86,11 @@ export default {
                 {
                     name: 'Last Seen',
                     value: `${lastseenString}`,
+                    inline: false
+                },
+                {
+                    name: 'Last Death',
+                    value: `${lastdeath}`,
                     inline: false
                 },
                 {

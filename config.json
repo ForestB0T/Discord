@@ -1,5 +1,5 @@
 {
     "load_commands": true,
     "load_guild_commands": false,
-    "apiUrl": "https://forestbot.org"
+    "apiUrl": "https://api.forestbot.org"
 }

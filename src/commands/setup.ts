@@ -45,12 +45,14 @@ export default {
 
         try {
       
-            await db.pQuery(
-                `INSERT INTO guilds (guild_id, channel_id, mc_server, setup_by, created_at, guild_name) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE channel_id = "${channel ? channel.id : null}", mc_server ="${mcserver}", setup_by = "${user}", created_at = ${Date.now()}`,
-                [guild_id, channel ? channel.id : null, mcserver, user, Date.now(), guild_name]
-            )
-
-            await client.syncGuildCache();
+            await db.addGuild({
+                guild_id,
+                channel_id: channel ? channel.id : null,
+                mc_server: mcserver,
+                setup_by: user,
+                created_at: Date.now(),
+                guild_name
+            })
 
             return interaction.reply({
                 content: `> I am now setup for the server **${mcserver}**. ${channel ? `My commands will work in the channel: <#${channel.id}>` : ""}`,
@@ -65,9 +67,5 @@ export default {
                 ephemeral: true
             })
         }
-        
-
-
-
     }
 }
