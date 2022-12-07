@@ -6,6 +6,33 @@ import fetchData from '../fuctions/fetch.js';
 import { convertUnixTimestamp } from '../utils/time/convert.js';
 import type ForestBot from '../structure/discord/Client';
 
+type User = {
+    username:  string,
+    kills:     number,
+    deaths:    number,
+    joins:     number,
+    leaves:    number,
+    lastseen:  string,
+    joindate:  string,
+    uuid:      string,
+    playtime:  number,
+    lastdeathString: string,
+    lastdeathTime:  number,
+    mc_server: string
+    error?:     string
+    Error?:    string
+}
+
+type msgCount = {
+    messagecount: number
+    Error?: string
+}
+
+type randomQuote = { 
+    message: string,
+    date: string
+    Error?: string
+}
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -27,25 +54,11 @@ export default {
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
         let userToSearch = interaction.options.getString("user")
 
-        type User = {
-            username:  string,
-            kills:     number,
-            deaths:    number,
-            joins:     number,
-            leaves:    number,
-            lastseen:  string,
-            joindate:  string,
-            uuid:      string,
-            playtime:  number,
-            lastdeathString: string,
-            lastdeathTime:  number,
-            mc_server: string
-            error?:     string
-        }
-
         let data = await fetchData(`${client.apiUrl}/user/${userToSearch}/${thisGuild.mc_server}`) as User;
+        let randomQuote = await fetchData(`${client.apiUrl}/quote/${userToSearch}/${thisGuild.mc_server}`) as randomQuote;
+        let msgCount = await fetchData(`${client.apiUrl}/messagecount/${userToSearch}/${thisGuild.mc_server}`) as msgCount;
 
-        if (data.error) {
+        if (data.error || data.Error || msgCount.Error || randomQuote.Error) {
             return interaction.reply({
                 content: `> Could not find user: **${userToSearch}**`,
                 ephemeral: true
@@ -53,8 +66,15 @@ export default {
         }
         
         let lastseenString: string;
+        let firstseenString: string;
 
         let lastdeath: string = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
+
+        if (/^\d+$/.test(data.joindate)) {
+            firstseenString = `${convertUnixTimestamp(parseInt(data.joindate))}, (${timeAgoStr(parseInt(data.joindate))})`;
+        } else {
+            firstseenString = data.joindate;
+        }
 
         if (/^\d+$/.test(data.lastseen)) {
             lastseenString = `${convertUnixTimestamp(parseInt(data.lastseen))}, (${timeAgoStr(parseInt(data.lastseen))})`;
@@ -80,7 +100,7 @@ export default {
 
                 {
                     name: 'First Seen',
-                    value: `${data.joindate}`,
+                    value: `${firstseenString}`,
                     inline: true
                 },
                 {
@@ -96,6 +116,14 @@ export default {
                 {
                     name: 'Joins / Leaves',
                     value: `${data.joins}`,
+                },
+                {
+                    name: 'Random Quote',
+                    value: `${randomQuote.message}`,
+                },
+                {
+                    name: 'Message Count',
+                    value: `${msgCount.messagecount}`,
                 },
                 {
                     name: 'Playtime',
