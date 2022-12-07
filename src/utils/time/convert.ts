@@ -8,7 +8,14 @@ const timeAgo = new TimeAgo('en-US');
 
 
 export const convertUnixTimestamp = (time: number) => {
-    const date = new Date(time * 1000);
+
+    if (Math.abs(Date.now() - time) < Math.abs(Date.now() - time * 1000)) {
+        time = time;
+     } else {
+        time = time * 1000;
+     }
+    
+    const date = new Date(time);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const year = date.getFullYear();
     const month = months[date.getMonth()];

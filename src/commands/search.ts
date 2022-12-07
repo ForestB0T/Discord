@@ -78,17 +78,15 @@ export default {
 
         let lastdeath: string = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
 
-        if (/^\d+$/.test(data.joindate)) {
-            firstseenString = `${convertUnixTimestamp(parseInt(data.joindate))}, (${timeAgoStr(parseInt(data.joindate))})`;
-        } else {
-            firstseenString = data.joindate;
+
+        const digitTest = string => {
+            if (/^\d+$/.test(string)) {
+                return `${convertUnixTimestamp(parseInt(string))}, (${timeAgoStr(parseInt(string))})`;
+            } else return string;
         }
 
-        if (/^\d+$/.test(data.lastseen)) {
-            lastseenString = `${convertUnixTimestamp(parseInt(data.lastseen))}, (${timeAgoStr(parseInt(data.lastseen))})`;
-        } else {
-            lastseenString = data.lastseen;
-        }
+        firstseenString = digitTest(data.joindate);
+        lastseenString = digitTest(data.lastseen)
 
         const statsEmbed: {} = {
             color: color.gray,

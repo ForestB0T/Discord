@@ -28,7 +28,7 @@ export default {
     },
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
 
-        let mcserver   = interaction.options.getString("mcserver");
+        let mcserver     = interaction.options.getString("mcserver");
         const channel    = interaction.options.getChannel("channel");
         const user       = interaction.user.username;
         const guild_id   = interaction.guild.id;
