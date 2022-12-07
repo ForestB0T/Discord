@@ -52,6 +52,9 @@ export default {
         ]
     },
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
+
+        await interaction.deferReply();
+
         let userToSearch = interaction.options.getString("user")
 
         let data = await fetchData(`${client.apiUrl}/user/${userToSearch}/${thisGuild.mc_server}`) as User;
@@ -59,10 +62,15 @@ export default {
         let msgCount = await fetchData(`${client.apiUrl}/messagecount/${userToSearch}/${thisGuild.mc_server}`) as msgCount;
 
         if (data.error || data.Error || msgCount.Error || randomQuote.Error) {
-            return interaction.reply({
+            interaction.editReply({
                 content: `> Could not find user: **${userToSearch}**`,
-                ephemeral: true
-            })
+            });
+            
+            setTimeout(async () => {
+                await interaction.deleteReply();
+            }, 10000);
+        
+            return;
         }
         
         let lastseenString: string;
@@ -149,7 +157,7 @@ export default {
             },
         }
 
-        return interaction.reply({
+        await interaction.editReply({
             embeds: [statsEmbed], 
             components: [{
                 type: 1,
@@ -161,6 +169,8 @@ export default {
                 }]
             }]
         });
+
+        return;
 
     }
 }
