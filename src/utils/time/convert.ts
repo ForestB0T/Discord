@@ -36,4 +36,6 @@ export const convertUnixTimestamp = (time: number) => {
      * @param time 
      * @returns string
      */
-export const timeAgoStr = (time: number) => timeAgo.format(time)
+export const timeAgoStr = (time: number) => {
+    return timeAgo.format(time)
+}

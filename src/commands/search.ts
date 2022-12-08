@@ -73,11 +73,16 @@ export default {
             return;
         }
         
+        let lastdeath: string;
+
+        if (!data.lastdeathTime || !data.lastdeathString) { 
+            lastdeath = "*Death not recorded*"
+        } else {
+            lastdeath = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
+        }
+
         let lastseenString: string;
         let firstseenString: string;
-
-        let lastdeath: string = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
-
 
         const digitTest = string => {
             if (/^\d+$/.test(string)) {
