@@ -1,5 +1,6 @@
 {
     "load_commands": true,
-    "load_guild_commands": false,
-    "apiUrl": "https://api.forestbot.org"
+    "load_guild_commands": true,
+    "apiUrl": "https://api.forestbot.org",
+    "rootGuild": "814728510307434497"
 }
