@@ -8,6 +8,6 @@ export *                from './structure/config.js';
 const opts = new Options();
 
 export const client    = new ForestBot(opts.discord);
-export const websocket = new WebSocketHandler("ws://localhost:5000/authenticate")
+export const websocket = new WebSocketHandler(`${opts.websocket_url}/authenticate`)
 export const api       = new ForestBotAPI();
 await client.login()

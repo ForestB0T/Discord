@@ -17,4 +17,5 @@ class DiscordSettings implements ClientOptions {
 
 export default class Options { 
     discord = new DiscordSettings()
+    websocket_url = cnf.websocket_url
 }

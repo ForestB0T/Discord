@@ -2,5 +2,6 @@
     "load_commands": false,
     "load_guild_commands": true,
     "apiUrl": "http://localhost:5000",
+    "websocket_url": "wss://api.forestbot.org",
     "rootGuild": "1041119999244378182"
 }
