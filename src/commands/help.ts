@@ -81,11 +81,11 @@ export default {
                     inline: false,
                 },
                 {
-                    name: "__/quote__",
+                    name: "__/messages__",
                     value: `
-                    *This command is used to get a random message sent by a user.* 
+                    *This command is used to get all messages from a user* 
                     \`\`\`/quote [user]\`\`\` 
-                    > **user** - the user you want to quote.
+                    > **user** - the user you want to search.
                     `,
                     inline: false
                 }

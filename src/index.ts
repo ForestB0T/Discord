@@ -1,11 +1,13 @@
 import "dotenv/config";
-import ForestBot from "./structure/discord/Client.js";
-import Database from "./structure/database/Pool.js";
-import Options from "./structure/config.js";
-export * from './structure/config.js';
+import ForestBot        from "./structure/discord/Client.js";
+import Options          from "./structure/config.js";
+import WebSocketHandler from "./structure/websocket/ws.js";
+import ForestBotAPI     from "./structure/api/forestapi.js";
+export *                from './structure/config.js';
 
 const opts = new Options();
 
-export const db: Database = new Database(opts.database)
-export const client: ForestBot = new ForestBot(opts.discord);
+export const client    = new ForestBot(opts.discord);
+export const websocket = new WebSocketHandler("ws://localhost:5000/authenticate")
+export const api       = new ForestBotAPI();
 await client.login()

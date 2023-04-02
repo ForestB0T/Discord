@@ -2,6 +2,7 @@ import type { Message } from "discord.js"
 import fetchData from "../fuctions/fetch.js";
 import type ForestBot from "../structure/discord/Client"
 import makeTablistEmbed from "../utils/embeds/make_tablist_embed.js";
+import { websocket } from "../index.js";
 
 const prefix = "!";
 
@@ -29,6 +30,7 @@ export default {
     execute: async (message: Message, client: ForestBot) => {
 
         const { content, author, channel } = message;
+        if (author.id === client.user.id || !content) return;
         const args = content.split(" ");
         args.shift();
 
@@ -38,14 +40,30 @@ export default {
             return channel.send(makeTablistEmbed(server, server+"_refresh"));
         }
 
-
         if (content.startsWith(prefix + "status")) {
             const msg = await channel.send({ embeds: [await statusEmbedBuilder()] });
             setInterval(async () => {
                 await msg.edit({ embeds: [await statusEmbedBuilder()] });
             }, 200000);
         }
-    
+
+
+        if (!client.liveChatChannelCache.has(channel.id) || content.length > 250) return;
+
+        const username = `${author.username}#${author.discriminator}`;
+        const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);
+
+        websocket.send({
+            action: "chat",
+            data: { 
+                username,
+                message: content,
+                time: Date.now(),
+                mc_server: channelArgs.mc_server                
+             },
+            mcServer: channelArgs.mc_server,
+            type: "discord"
+        });
 
     }
 }

@@ -1,6 +1,6 @@
 import { CommandInteraction, Message } from 'discord.js';
 import type ForestBot from '../structure/discord/Client';
-import { db } from "../index.js";
+import { api } from "../index.js";
 import { getNameFromDomain } from '../utils/checkString.js';
 
 export default {
@@ -50,7 +50,7 @@ export default {
 
         let mcserver     = interaction.options.getString("mcserver");
         const channel    = interaction.options.getChannel("channel");
-        const user       = interaction.user.username;
+        const user       = `${interaction.user.username}#${interaction.user.discriminator}`;
         const guild_id   = interaction.guild.id;
         const guild_name = interaction.guild.name;
         const subCommand = interaction.options.getSubcommand();
@@ -66,20 +66,25 @@ export default {
                 })
 
             try {
-                await db.addLiveChat({
-                    guild_name,
-                    guild_id,
-                    channel_id: channel.id,
+                const success = await api.addLiveChat({
+                    guildName: guild_name,
+                    guildID: guild_id,
+                    channelID: channel.id,
                     mc_server: mcserver,
-                    setup_by: user,
-                    created_at: Date.now()
+                    setupBy: user,
+                    date: `${Date.now()}`
                 })
+
+                await client.syncLiveChatChannelsCache();
+
+                if (!success || !success.success) {
+                    throw new Error("Failed to fetch add livechat guild.")
+                }
 
                 return interaction.reply({
-                    content: "> Live chat initialized, allow up to 2 minutes for messages to appear.",
+                    content: `> Live chat initialized for ${mcserver}, allow up to 2 minutes for messages to appear.`,
                     ephemeral: false
                 })
-
 
             } catch (err) {
                 return interaction.reply({
@@ -93,11 +98,13 @@ export default {
         const removeLivechat = async () => {
 
             try {
-                await db.removeLiveChat(guild_id, channel ? channel.id : null);
+                await api.removeLiveChat({guild_id, channel_id: channel ? channel.id : null});
+               
+                await client.syncLiveChatChannelsCache();
 
-                let removedStr = channel
-                    ? "> Livechat removed from all channels."
-                    : "> Live chat has been removed."
+                let removedStr = !channel
+                    ? "> Livechat removed from all channels, allow up to 2 minutes for messages to stop."
+                    : "> Live chat has been removed, allow up to 2 minutes for messages to stop."
 
                 return interaction.reply({
                     content: removedStr,

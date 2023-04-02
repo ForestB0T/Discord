@@ -1,5 +1,5 @@
 import { Interaction, Guild } from 'discord.js';
-import { db }          from "../index.js";
+import { api }          from "../index.js";
 import type ForestBot  from '../structure/discord/Client.js';
 
 export default {
@@ -7,7 +7,7 @@ export default {
     once: false,
     execute: async (guild: Guild, client: ForestBot) => {
         console.log("I have left a guild: " + guild.id);
-        await db.removeGuild(guild.id);
+        await api.removeGuild({ guild_id: guild.id});
         await client.syncGuildCache();
     }
 }

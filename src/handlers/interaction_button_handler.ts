@@ -13,15 +13,7 @@ export default async function buttonHandler(interaction: Interaction, client: Fo
         })
     }
 
-    if (interaction["customId"] === "refresh") {
+    if (interaction["customId"] === "refresh" || interaction["customId"] === thisGuild.mc_server) {
         return await interaction.update(makeTablistEmbed(thisGuild.mc_server, "refresh"));
-    } else if (interaction["customId"]) {
-        let title = interaction["customId"];
-        if (title.endsWith("_refresh")) {
-            title = title.slice(0, -8);
-        }
-    
-        return await interaction.update(makeTablistEmbed(title, interaction["customId"]));
     }
-
 };
