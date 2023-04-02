@@ -16,7 +16,7 @@ interface ForestBotApiResponse {
 
 export default class ForestBotAPI {
 
-    private apiUrl: string = cnf.apiUrl??"http://localhost:5000";
+    private apiUrl: string = cnf.apiUrl??"https://api.forestbot.org";
     private apiKey: string = process.env.apikey;
 
 

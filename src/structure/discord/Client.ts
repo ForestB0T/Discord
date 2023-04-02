@@ -84,7 +84,6 @@ export default class ForestBot extends Client {
 
     public async syncGuildCache() {
         const guilds = await api.getAllGuilds();
-        console.log(guilds);
         for (const guild of guilds) {
             this.cachedGuilds.set(guild.guild_id, guild);
         }
