@@ -47,7 +47,7 @@ async function createMessageEmbed(limit: number, mc_server: string, username: st
         
 
     if (messages && messages.length > 0) {
-        const formattedMessages = messages.map(({ name, message: content, date }) => `${name} » ${content} \`${timeAgoStr(Number(date))}\``);
+        const formattedMessages = messages.map(({ name, message: content, date }) => `**${timeAgoStr(Number(date))}** ${content}`);
         embed.setDescription(formattedMessages.join("\n"));
     } else {
         embed.setDescription("No messages found. Try using a different search criteria.");
