@@ -24,7 +24,7 @@ export default class ForestBot extends Client {
         this.token = process.env.prod == "true" ? process.env.TOKEN : process.env.TESTTOKEN
         this.commandCollection = new Collection();
         this.commands = [];
-        this.on("ready", async () => {
+        this.once("ready", async () => {
             console.log(`Logged in as ${this.user.tag}!`);
             await this.syncGuildCache();
             await this.syncLiveChatChannelsCache();
@@ -84,6 +84,7 @@ export default class ForestBot extends Client {
 
     public async syncGuildCache() {
         const guilds = await api.getAllGuilds();
+        console.log(guilds);
         for (const guild of guilds) {
             this.cachedGuilds.set(guild.guild_id, guild);
         }
