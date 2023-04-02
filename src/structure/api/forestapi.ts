@@ -28,8 +28,14 @@ export default class ForestBotAPI {
         
         try {
             const response = await fetch(`${this.apiUrl}/getguilds/${this.apiKey}`);
+            
+            console.log(response);
+           
             if (!response || !response.ok) throw new Error("Error getting all guilds from api.");
             const data = await response.json() as ForestBotApiResponse;
+            
+            console.log(data, " guild data.")
+
             return data.data as DiscordGuild[];
 
         } catch (err) {
