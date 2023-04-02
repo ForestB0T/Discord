@@ -62,7 +62,7 @@ export default class WebSocketHandler {
     public connect() {
         this.ws = new WebSocket(this.url, {
             headers: {
-                'x-api-key': process.env.apiKey,
+                'x-api-key': process.env.apikey,
                 "client-type": "discord",
                 "client-id": `main-bot`
             }
