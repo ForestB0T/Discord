@@ -75,8 +75,8 @@ export default class WebSocketHandler {
             }, 5000)
         });
 
-        this.ws.on('close', () => {
-            console.log('WebSocket connection closed');
+        this.ws.on('close', (reason) => {
+            console.log('WebSocket connection closed ', reason);
             setTimeout(() => { this.connect() }, 10000)
         });
 
