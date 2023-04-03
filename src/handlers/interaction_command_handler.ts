@@ -29,6 +29,9 @@ export default async function commandHandler(interaction: CommandInteraction, cl
     if (permissions) {
         if (typeof permissions === "string") permissions = [permissions];
         for (const perm of permissions) {
+
+            if (member.roles.cache.some(role => role.permissions.has(perm))) return run(interaction, client, thisGuild);
+
             if (!member.permissions.has(perm)) {
                 client.ErrorHandler.noUserPermission(interaction, perm);
                 return
