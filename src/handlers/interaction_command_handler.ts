@@ -22,7 +22,7 @@ export default async function commandHandler(interaction: CommandInteraction, cl
                 content: `> Please use commands in <#${thisGuild.channel_id}>.`,
                 ephemeral: true
             });
-            return
+            return;
         }
     }
 
