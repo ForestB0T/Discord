@@ -1,4 +1,5 @@
 import type { CommandInteraction, GuildMember } from 'discord.js';
+import { Permissions } from 'discord.js';
 import type ForestBot                           from '../structure/discord/Client';
 
 export default async function commandHandler(interaction: CommandInteraction, client: ForestBot) {
@@ -30,7 +31,7 @@ export default async function commandHandler(interaction: CommandInteraction, cl
         if (typeof permissions === "string") permissions = [permissions];
         for (const perm of permissions) {
 
-            if (member.roles.cache.some(role => role.permissions.has(perm))) return run(interaction, client, thisGuild);
+            if (member.roles.cache.some(role => role.permissions.has(Permissions.FLAGS[perm]))) return run(interaction, client, thisGuild);
 
             if (!member.permissions.has(perm)) {
                 client.ErrorHandler.noUserPermission(interaction, perm);
