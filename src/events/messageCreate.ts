@@ -5,7 +5,7 @@ import makeTablistEmbed from "../utils/embeds/make_tablist_embed.js";
 import { websocket } from "../index.js";
 
 const prefix = "!";
-
+const userCooldowns = new Map();
 
 async function statusEmbedBuilder() {
     const data = await fetchData("https://api.forestbot.org/status") as any;
@@ -16,12 +16,12 @@ async function statusEmbedBuilder() {
             { name: 'Connected Servers', value: value.length > 0 ? `\`\`\`\n${value}\n\`\`\`` : 'No servers connected' },
             { name: 'Database Connection', value: data.status.databaseIsConnected ? 'Connected' : 'Disconnected' },
             { name: 'Memory Usage', value: data.status.memory },
-            { name: 'Messages Saved', value: (data.status.messages.toLocaleString()).toString() , inline: true },
+            { name: 'Messages Saved', value: (data.status.messages.toLocaleString()).toString(), inline: true },
             { name: 'Users Saved', value: (data.status.users.toLocaleString()).toString(), inline: true }
         ]
     };
 
-   return embed;
+    return embed;
 }
 
 export default {
@@ -37,7 +37,7 @@ export default {
         if (content.startsWith(prefix + "tab")) {
             if (!args[0]) return;
             const server = args[0];
-            return channel.send(makeTablistEmbed(server, server+"_refresh"));
+            return channel.send(makeTablistEmbed(server, server + "_refresh"));
         }
 
         if (content.startsWith(prefix + "status")) {
@@ -48,22 +48,52 @@ export default {
         }
 
 
-        if (!client.liveChatChannelCache.has(channel.id) || content.length > 250) return;
+        // if (!client.liveChatChannelCache.has(channel.id) || content.length > 250) return;
 
-        const username = `${author.username}#${author.discriminator}`;
-        const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);
+        // const username = `${author.username}#${author.discriminator}`;
+        // const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);
 
-        websocket.send({
-            action: "chat",
-            data: { 
-                username,
-                message: content,
-                time: Date.now(),
-                mc_server: channelArgs.mc_server                
-             },
-            mcServer: channelArgs.mc_server,
-            type: "discord"
-        });
+        // websocket.send({
+        //     action: "chat",
+        //     data: { 
+        //         username,
+        //         message: content,
+        //         time: Date.now(),
+        //         mc_server: channelArgs.mc_server                
+        //      },
+        //     mcServer: channelArgs.mc_server,
+        //     type: "discord"
+        // });
+        if (client.liveChatChannelCache.has(channel.id) && content && content.length < 250) {
+            const username = `${author.username}#${author.discriminator}`;
+            const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);
+
+            // Check user cooldown for this channel
+            const userLastMessageTime = userCooldowns.get(username)?.get(channelArgs.mc_server) || 0;
+            const currentTime = Date.now();
+            if (currentTime - userLastMessageTime < 10000) {
+                return;
+            }
+
+            // Update user cooldown for this channel
+            if (!userCooldowns.has(username)) {
+                userCooldowns.set(username, new Map());
+            }
+            userCooldowns.get(username)?.set(channelArgs.mc_server, currentTime);
+
+            // Send message to Minecraft server
+            websocket.send({
+                action: "chat",
+                data: {
+                    username,
+                    message: content,
+                    time: currentTime,
+                    mc_server: channelArgs.mc_server
+                },
+                mcServer: channelArgs.mc_server,
+                type: "discord"
+            });
+        }
 
     }
 }
