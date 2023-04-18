@@ -154,7 +154,12 @@ export default class ForestBotAPI {
 
     public async getAllLiveChatChannels(): Promise<DiscordForestBotLiveChat[]|null> {
         try {
-            const response = await fetch(`${this.apiUrl}/getchannels/${this.apiKey}`);
+            const response = await fetch(`${this.apiUrl}/getchannels`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": this.apiKey
+                }
+            });
             if (!response || !response.ok) throw new Error("not ok response.");
 
             const channels = await response.json() as ForestBotApiResponse;
