@@ -52,9 +52,12 @@ export default class ForestBotAPI {
      */
     public async addLiveChat(args: AddLiveChatArgs): Promise<ForestBotApiResponse|null> {
         try {
-            const response = await fetch(`${this.apiUrl}/addlivechat/${this.apiKey}`, {
+            const response = await fetch(`${this.apiUrl}/addlivechat`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-api-key": this.apiKey
+                 },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Adding livechat result not ok.");
@@ -74,9 +77,12 @@ export default class ForestBotAPI {
      */
     public async addGuild(args: AddGuildArgs): Promise<ForestBotApiResponse|null> {
         try {
-            const response = await fetch(`${this.apiUrl}/addguild/${this.apiKey}`, {
+            const response = await fetch(`${this.apiUrl}/addguild`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-api-key": this.apiKey
+                 },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Adding guild result not ok.");
@@ -97,9 +103,12 @@ export default class ForestBotAPI {
      */
     public async removeGuild(args: RemoveGuildArgs): Promise<ForestBotApiResponse|null> {
         try {
-            const response = await fetch(`${this.apiUrl}/removeguild/${this.apiKey}`, {
+            const response = await fetch(`${this.apiUrl}/removeguild`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-api-key": this.apiKey
+                 },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Removing guild result not ok.");
@@ -120,7 +129,7 @@ export default class ForestBotAPI {
      */
     public async removeLiveChat(args: RemoveLiveChatArgs): Promise<ForestBotApiResponse|null> {
         try {
-            const response = await fetch(`${this.apiUrl}/removelivechat/${this.apiKey}`, {
+            const response = await fetch(`${this.apiUrl}/removelivechat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(args)
