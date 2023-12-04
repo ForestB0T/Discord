@@ -1,19 +1,23 @@
-import { cnf, color } from "../../index.js";
-import makeid from "../makeId.js";
+import { cnf }        from "../../index.js";
+import makeid                from "../makeId.js";
+import { MessageAttachment } from "discord.js";
 
-const makeTablistEmbed = (mc_server: string, custom_id: string) => {
+const makeTablistEmbed = async (mc_server: string, custom_id: string) => {
     let tablisturl = `${cnf.apiUrl}/tab/${mc_server}?${makeid(14)}`;
 
+    const response = await fetch(tablisturl);
+    if (!response.ok) {
+        throw new Error("Problem fetching tablist. status: " + response.status);
+    }
+
+    
+    const imageDataArrayBuffer = await response.arrayBuffer();
+    const imageDataBuffer = Buffer.from(imageDataArrayBuffer);
+    const att = new MessageAttachment(imageDataBuffer, "tablist.png")
+
     return {
-        embeds: [{
-            color: color.Green,
-            title: `**${mc_server}**`,
-            image: { url: tablisturl },
-            timestamp: new Date(),
-            footer: {
-                text: `${cnf.apiUrl}`
-            }
-        }],
+        content: `${mc_server}` ,
+        files: [att],
         components: [{
             type: 1,
             components: [

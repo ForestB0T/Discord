@@ -1,7 +1,7 @@
 {
     "load_commands": false,
     "load_guild_commands": true,
-    "apiUrl": "https://api.forestbot.org",
-    "websocket_url": "wss://api.forestbot.org",
-    "rootGuild": "1041119999244378182"
+    "apiUrl": "http://192.168.100.132:8000",
+    "websocket_url": "ws://192.168.100.132:8000",
+    "rootGuild": "814728510307434497"
 }
