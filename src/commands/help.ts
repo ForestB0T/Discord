@@ -14,87 +14,102 @@ export default {
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {   
         
         const helpEmbed = {
-            color: color.Violet,
-            title: "Help on commands and general setup.",
+            color: color.Green,
+            title: "Help on Commands and General Setup",
+            description: "Below are commands and setup instructions for using the bot.",
             fields: [
                 {
                     name: "__/setup__",
-                    value: `
-                    *This command is used to set up the bot.*
-                    \`\`\`/setup [mc server] [channel]\`\`\` 
-                    > **mc server** - the minecraft server you want to use me for 
-                    > **channel** - the channel you want my commands to work in (optional)
-                    `,
-                    inline: false
+                    value: "This command is used to set up the bot.\nExample: `/setup simplyvanilla`",
+                    inline: false,
                 },
                 {
-                    name: '\u200b',
-                    value: '\u200b',
+                    name: "Usage:",
+                    value: "/setup [mc server] [channel]",
+                    inline: false,
+                },
+                {
+                    name: "Parameters:",
+                    value: "> **mc server** - the Minecraft server for bot usage\n> **channel** - the command channel (optional)",
+                    inline: false,
+                },
+                {
+                    name: "\u200B",
+                    value: "\u200B",
                     inline: false,
                 },
                 {
                     name: "__/livechat__",
-                    value: `
-                    *This command is used to setup a livechat bridge.* 
-                    \`\`\`/livechat add [mc server] [channel]\`\`\` 
-                    \`\`\`/livechat remove [channel] \`\`\`
-                    **Adding a livechat** 
-                    > **mc server** - the minecraft server you want the livechat for 
-                    > **channel** - the channel you want the livechat to work in 
-                    **Removing a livechat**
-                    > **channel** - the channel you want to remove the livechat from
-                    > **Note:** Livechats are limited to the servers that I am currently in.
-                    `,
-                    inline: false
+                    value: "Setup a livechat bridge or remove an existing one.",
+                    inline: false,
                 },
                 {
-                    name: '\u200b',
-                    value: '\u200b',
+                    name: "Usage:",
+                    value: "/livechat add [mc server] [channel]\n/livechat remove [channel]",
+                    inline: false,
+                },
+                {
+                    name: "Adding a Livechat:",
+                    value: "> **mc server** - the Minecraft server\n> **channel** - the livechat channel",
+                    inline: false,
+                },
+                {
+                    name: "Removing a Livechat:",
+                    value: "> **channel** - the channel to remove the livechat from\nNote: Livechats are limited to the servers the bot is in.",
+                    inline: false,
+                },
+                {
+                    name: "\u200B",
+                    value: "\u200B",
                     inline: false,
                 },
                 {
                     name: "__/tablist__",
-                    value: `
-                    *This command is used to get a live tablist of a minecraft server.* 
-                    \`\`\`/tablist\`\`\` 
-                    `,
-                    inline: false
+                    value: "Get a live tablist of a Minecraft server.",
+                    inline: false,
                 },
                 {
-                    name: '\u200b',
-                    value: '\u200b',
+                    name: "Usage:",
+                    value: "/tablist",
+                    inline: false,
+                },
+                {
+                    name: "\u200B",
+                    value: "\u200B",
                     inline: false,
                 },
                 {
                     name: "__/search__",
-                    value: `
-                    *This command is used to query all statistics stored on a user.* 
-                    \`\`\`/search [user]\`\`\`
-                    > **user** - the user you want to search for
-                    > Gets playtime, joindate, lastseen, kills, deaths, and more. 
-                    `,
-                    inline: false
+                    value: "Query statistics stored on a user.",
+                    inline: false,
                 },
                 {
-                    name: '\u200b',
-                    value: '\u200b',
+                    name: "Usage:",
+                    value: "/search [user]",
+                    inline: false,
+                },
+                {
+                    name: "Parameters:",
+                    value: "> **user** - the user to search for\nGets playtime, joindate, lastseen, kills, deaths, and more.",
+                    inline: false,
+                },
+                {
+                    name: "\u200B",
+                    value: "\u200B",
                     inline: false,
                 },
                 {
                     name: "__/messages__",
-                    value: `
-                    *This command is used to get all messages from a user* 
-                    \`\`\`/quote [user]\`\`\` 
-                    > **user** - the user you want to search.
-                    `,
-                    inline: false
-                }
+                    value: "Get all messages from a user.",
+                    inline: false,
+                },
             ],
             timestamp: new Date(),
             footer: {
-                text: "https://forestbot.org"
+                text: "Visit https://forestbot.org for more information.",
             }
-        }
+        };
+        
 
         return interaction.reply({ embeds: [helpEmbed]})
 

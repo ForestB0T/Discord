@@ -48,22 +48,6 @@ export default {
         }
 
 
-        // if (!client.liveChatChannelCache.has(channel.id) || content.length > 250) return;
-
-        // const username = `${author.username}#${author.discriminator}`;
-        // const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);
-
-        // websocket.send({
-        //     action: "chat",
-        //     data: { 
-        //         username,
-        //         message: content,
-        //         time: Date.now(),
-        //         mc_server: channelArgs.mc_server                
-        //      },
-        //     mcServer: channelArgs.mc_server,
-        //     type: "discord"
-        // });
         if (client.liveChatChannelCache.has(channel.id) && content && content.length < 250) {
             const username = `${author.username}#${author.discriminator}`;
             const { channel: chan, channelArgs } = client.liveChatChannelCache.get(channel.id);

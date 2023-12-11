@@ -12,7 +12,15 @@ import type Options from "../config";
 export default class ForestBot extends Client {
 
     public ErrorHandler: ErrorHandler;
-    public commandCollection: Collection<string, any>;
+    public commandCollection: Collection<string,{
+        default: { 
+            permissions:string[]|string; 
+            run: any; 
+            channel_strict: boolean; 
+            requires_setup: boolean; 
+            Iswhitelisted: boolean; 
+        };
+    }>;
     public apiUrl: string = cnf.apiUrl;
     public commands: any[];
     public cachedGuilds: Map<string, Guild> = new Map();

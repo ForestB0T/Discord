@@ -166,6 +166,29 @@ export default class ForestBotAPI {
         }
     }
 
+    /**
+     * Get last advancements
+     * @returns 
+     */
+    public async getAdvancements(args: GetUserAdvancementsArgs): Promise<UserAdvancementRow|null> {
+        const { mc_server,limit,type,username } = args
+        try {
+            const response = await fetch(`${this.apiUrl}/advancements/${username}/${mc_server}/${limit}/${type}`)
+            if (!response || !response.ok) throw new Error("Bad response while getting user advancements.")
+            
+            const data = await response.json() as UserAdvancementRow;
+            
+            if (!data) throw new Error("failed to get user advancements from response" + data);
+
+            return data
+            
+        } catch (err) {
+            console.log(err, "Error in getAdvancements")
+            return null
+        }
+    
+    }   
+
     public async getAllLiveChatChannels(): Promise<DiscordForestBotLiveChat[]|null> {
         try {
             const response = await fetch(`${this.apiUrl}/getchannels`, {

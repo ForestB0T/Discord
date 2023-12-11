@@ -32,3 +32,24 @@ interface UserMessageRow {
     mc_server: string;
 }
 
+
+interface GetUserAdvancementsArgs {
+    username: string,
+    mc_server: string,
+    limit: number,
+    type: "DESC"|"ASC"
+}
+
+interface UserAdvancementRow {
+    advancements: [
+        {
+            username: string,
+            advancement: string,
+            time: number,
+            mc_server: string,
+            id: number,
+            uuid: string
+        }
+    ]
+}
+
