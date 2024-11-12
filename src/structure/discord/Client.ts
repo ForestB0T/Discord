@@ -3,13 +3,17 @@ import { Routes } from "discord-api-types/v9";
 import { Collection, Client, TextChannel, ColorResolvable } from "discord.js";
 import { lstatSync } from "fs";
 import { readdir } from "fs/promises";
-import { api, client, cnf, color } from '../../index.js';
+import { client, cnf, color } from '../../index.js';
 import path from "path";
 import ErrorHandler from "./ErrorHandler.js";
 import { fileURLToPath } from 'node:url';
 import type Options from "../config";
+import { ForestBotAPI, ForestBotAPIOptions } from "forestbot-api-wrapper-v2";
+import apiHandler from "../api/forestapi.js";
 
 export default class ForestBot extends Client {
+
+    public API: apiHandler;
 
     public ErrorHandler: ErrorHandler;
     public commandCollection: Collection<string,{
@@ -26,8 +30,9 @@ export default class ForestBot extends Client {
     public cachedGuilds: Map<string, Guild> = new Map();
     public liveChatChannelCache: Map<string, { channelArgs: DiscordForestBotLiveChat, channel: TextChannel }> = new Map();
 
-    constructor(options: Options["discord"]) {
+    constructor(options: Options["discord"], wsOpts: ForestBotAPIOptions) {
         super(options);
+        this.API = new apiHandler(wsOpts);
         this.ErrorHandler = new ErrorHandler()
         this.token = process.env.prod == "true" ? process.env.TOKEN : process.env.TESTTOKEN
         this.commandCollection = new Collection();
@@ -70,10 +75,16 @@ export default class ForestBot extends Client {
         }
     };
 
+    public async sendMessageToSudoChannel(text: string) { 
+        const sudoChannel = this.channels.cache.get(cnf.sudoChannel) as TextChannel;
+        if (!sudoChannel) return;
+        await sudoChannel.send(text);
+    }
+
 
 
     public async syncLiveChatChannelsCache() {
-        const channels = await api.getAllLiveChatChannels();
+        const channels = await this.API.getAllLiveChatChannels();
         for (const channel of channels) {
             const discordTextChannel = this.channels.cache.get(channel.channelID);
 
@@ -91,7 +102,7 @@ export default class ForestBot extends Client {
     }
 
     public async syncGuildCache() {
-        const guilds = await api.getAllGuilds();
+        const guilds = await this.API.getAllGuilds();
         for (const guild of guilds) {
             this.cachedGuilds.set(guild.guild_id, guild);
         }

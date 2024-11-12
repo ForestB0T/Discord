@@ -7,7 +7,10 @@ const makeTablistEmbed = async (mc_server: string, custom_id: string) => {
 
     const response = await fetch(tablisturl);
     if (!response.ok) {
-        throw new Error("Problem fetching tablist. status: " + response.status);
+        console.error("Problem fetching tablist. status: " + response.status)
+        return {
+            content: "Problem fetching tablist. Try again later."
+        }
     }
 
     

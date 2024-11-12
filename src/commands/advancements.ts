@@ -1,5 +1,5 @@
 import ForestBot from "../structure/discord/Client";
-import { api, color } from "../index.js";
+import { color } from "../index.js";
 import {
     CommandInteraction,
     Interaction,

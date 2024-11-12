@@ -1,6 +1,5 @@
 import { CommandInteraction, Message } from 'discord.js';
 import type ForestBot from '../structure/discord/Client';
-import { api } from "../index.js";
 import { getNameFromDomain } from '../utils/checkString.js';
 
 export default {
@@ -66,7 +65,7 @@ export default {
                 })
 
             try {
-                const success = await api.addLiveChat({
+                const success = await client.API.addLiveChat({
                     guildName: guild_name,
                     guildID: guild_id,
                     channelID: channel.id,
@@ -98,7 +97,7 @@ export default {
         const removeLivechat = async () => {
 
             try {
-                await api.removeLiveChat({guild_id, channel_id: channel ? channel.id : null});
+                await client.API.removeLiveChat({guild_id, channel_id: channel ? channel.id : null});
                
                 await client.syncLiveChatChannelsCache();
 

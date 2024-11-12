@@ -1,7 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import { getNameFromDomain } from '../utils/checkString.js';
 import type ForestBot         from '../structure/discord/Client';
-import { api }                 from "../index.js";
 
 export default {
     permissions: "MANAGE_GUILD",
@@ -45,7 +44,7 @@ export default {
 
         try {
     
-            const success = await api.addGuild({
+            const success = await client.API.addGuild({
                 guild_id,
                 channel_id: channel ? channel.id : null,
                 mc_server: mcserver,

@@ -1,12 +1,13 @@
 import fetch from "node-fetch";
-import { cnf } from "../../index.js";
+import { cnf, client } from "../../index.js";
+import { ForestBotAPI, ForestBotAPIOptions, MinecraftAdvancementMessage, MinecraftChatMessage, MinecraftPlayerDeathMessage, MinecraftPlayerJoinMessage, MinecraftPlayerKillMessage, MinecraftPlayerLeaveMessage } from "forestbot-api-wrapper-v2";
 
 
 type AddGuildArgs = DiscordGuild;
-type RemoveLiveChatArgs = { guild_id: string, channel_id?: string|null };
+type RemoveLiveChatArgs = { guild_id: string, channel_id?: string | null };
 type AddLiveChatArgs = DiscordForestBotLiveChat;
 type RemoveGuildArgs = { guild_id: string };
-type GetUserMessageArgs = { username: string, mc_server: string, limit: number, type: "ASC"|"DESC" }
+
 interface ForestBotApiResponse {
     success: boolean,
     data?: any,
@@ -14,29 +15,60 @@ interface ForestBotApiResponse {
     messages?: any
 }
 
-export default class ForestBotAPI {
+export default class apiHandler extends ForestBotAPI {
 
-    private apiUrl: string = cnf.apiUrl??"https://api.forestbot.org";
-    private apiKey: string = process.env.apikey;
+    constructor(options: ForestBotAPIOptions) {
+        super(options);
+
+        this.on("websocket_open", () => {
+            console.log("Websocket opened.");
+        });
+
+        this.on("websocket_close", () => {
+            console.log("Websocket closed.");
+        });
+
+        this.on("websocket_error", (data: any) => {
+            console.log("Websocket error: " + data);
+        });
+
+        this.on("inbound_minecraft_chat", (data: MinecraftChatMessage) => {
+            client?.minecraftChatEmbed(`**${data.name}** » ${data.message}`, "gray", data.mc_server);
+        });
+        this.on("minecraft_player_death", (data: MinecraftPlayerDeathMessage) => {
+            client?.minecraftChatEmbed(data.death_message, "Indigo", data.mc_server);
+        });
+        this.on("minecraft_player_join", (data: MinecraftPlayerJoinMessage) => {
+            client?.minecraftChatEmbed(`**${data.username}** joined the server.`, "Green", data.server);
+        });
+        this.on("minecraft_player_leave", (data: MinecraftPlayerLeaveMessage) => {
+            client?.minecraftChatEmbed(`**${data.username}** left the server.`, "red", data.server);
+        });
+        this.on("minecraft_advancement", (data: MinecraftAdvancementMessage) => {
+            client?.minecraftChatEmbed(data.advancement, "Yellow", data.mc_server);
+        });
+        // here we listen for the events for minecraft messages to log to game chat.
+
+    }
 
 
     /**
-     * Get all discord guilds that forestbot has been setup in.
-     * @returns Promise<DiscordGuild[]|null>
-     */
-    public async getAllGuilds(): Promise<DiscordGuild[]|null> {
-        
+ * Get all discord guilds that forestbot has been setup in.
+ * @returns Promise<DiscordGuild[]|null>
+ */
+    public async getAllGuilds(): Promise<DiscordGuild[] | null> {
+
         try {
-            const response = await fetch(`${this.apiUrl}/getguilds`, {
+            const response = await fetch(`${this.apiurl}/getguilds`, {
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": this.apiKey
                 }
             });
-           
+
             if (!response || !response.ok) throw new Error("Error getting all guilds from api.");
             const data = await response.json() as ForestBotApiResponse;
-            
+
             return data.data as DiscordGuild[];
 
         } catch (err) {
@@ -50,14 +82,14 @@ export default class ForestBotAPI {
      * @param args AddLiveChatArgs
      * @returns Promise<ForestBotApiResponse|null> 
      */
-    public async addLiveChat(args: AddLiveChatArgs): Promise<ForestBotApiResponse|null> {
+    public async addLiveChat(args: AddLiveChatArgs): Promise<ForestBotApiResponse | null> {
         try {
-            const response = await fetch(`${this.apiUrl}/addlivechat`, {
+            const response = await fetch(`${this.apiurl}/addlivechat`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "x-api-key": this.apiKey
-                 },
+                },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Adding livechat result not ok.");
@@ -75,14 +107,14 @@ export default class ForestBotAPI {
      * @param args AddGuildArgs
      * @returns Promise<ForestBotApiResponse|null> 
      */
-    public async addGuild(args: AddGuildArgs): Promise<ForestBotApiResponse|null> {
+    public async addGuild(args: AddGuildArgs): Promise<ForestBotApiResponse | null> {
         try {
-            const response = await fetch(`${this.apiUrl}/addguild`, {
+            const response = await fetch(`${this.apiurl}/addguild`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "x-api-key": this.apiKey
-                 },
+                },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Adding guild result not ok.");
@@ -101,14 +133,14 @@ export default class ForestBotAPI {
      * @param args RemoveGuildArgs
      * @returns Promise<ForestBotApiResponse|null> 
      */
-    public async removeGuild(args: RemoveGuildArgs): Promise<ForestBotApiResponse|null> {
+    public async removeGuild(args: RemoveGuildArgs): Promise<ForestBotApiResponse | null> {
         try {
-            const response = await fetch(`${this.apiUrl}/removeguild`, {
+            const response = await fetch(`${this.apiurl}/removeguild`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "x-api-key": this.apiKey
-                 },
+                },
                 body: JSON.stringify(args)
             })
             if (!response || !response.ok) throw new Error("Removing guild result not ok.");
@@ -127,9 +159,9 @@ export default class ForestBotAPI {
      * @param args RemoveLiveChatArgs
      * @returns Promise<ForestBotApiResponse|null> 
      */
-    public async removeLiveChat(args: RemoveLiveChatArgs): Promise<ForestBotApiResponse|null> {
+    public async removeLiveChat(args: RemoveLiveChatArgs): Promise<ForestBotApiResponse | null> {
         try {
-            const response = await fetch(`${this.apiUrl}/removelivechat`, {
+            const response = await fetch(`${this.apiurl}/removelivechat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(args)
@@ -143,55 +175,9 @@ export default class ForestBotAPI {
         }
     }
 
-
-    /**
-     * Get last messages.
-     * @param args 
-     * @returns 
-     */
-    public async getMessages(args: GetUserMessageArgs): Promise<UserMessageRow[]|null> {
-        const { username, mc_server, limit, type } = args;
+    public async getAllLiveChatChannels(): Promise<DiscordForestBotLiveChat[] | null> {
         try {
-            const response = await fetch(`${this.apiUrl}/messages/${username}/${mc_server}/${limit}/${type}`);
-            if (!response || !response.ok) throw new Error("bad response while getting user messages.");
-
-            const data = await response.json() as ForestBotApiResponse;
-            if (!data.success) throw new Error("false success while getting user messages: " + data.message);
-
-            return data.data.messages;
-
-        } catch (err) {
-            console.error(err, " Error in getMessages");
-            return null;
-        }
-    }
-
-    /**
-     * Get last advancements
-     * @returns 
-     */
-    public async getAdvancements(args: GetUserAdvancementsArgs): Promise<UserAdvancementRow|null> {
-        const { mc_server,limit,type,username } = args
-        try {
-            const response = await fetch(`${this.apiUrl}/advancements/${username}/${mc_server}/${limit}/${type}`)
-            if (!response || !response.ok) throw new Error("Bad response while getting user advancements.")
-            
-            const data = await response.json() as UserAdvancementRow;
-            
-            if (!data) throw new Error("failed to get user advancements from response" + data);
-
-            return data
-            
-        } catch (err) {
-            console.log(err, "Error in getAdvancements")
-            return null
-        }
-    
-    }   
-
-    public async getAllLiveChatChannels(): Promise<DiscordForestBotLiveChat[]|null> {
-        try {
-            const response = await fetch(`${this.apiUrl}/getchannels`, {
+            const response = await fetch(`${this.apiurl}/getchannels`, {
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": this.apiKey

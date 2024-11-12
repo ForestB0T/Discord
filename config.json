@@ -1,8 +1,9 @@
 {
     "load_commands": false,
     "load_guild_commands": true,
-    "apiUrl": "http://192.168.100.132:8000",
-    "websocket_url": "ws://192.168.100.132:8000",
+    "apiUrl": "http://localhost:8000",
+    "websocket_url": "ws://localhost:8000",
     "rootGuild": "814728510307434497",
-    "whitelistedids": ["703044116019281963"]
+    "whitelistedids": ["703044116019281963"],
+    "sudoChannel": "1305668921545986128"
 }

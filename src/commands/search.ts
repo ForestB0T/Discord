@@ -2,37 +2,8 @@ import { CommandInteraction } from 'discord.js';
 import { color } from '../index.js';
 import { dhms } from '../utils/time/dhms.js';
 import { timeAgoStr } from '../utils/time/convert.js';
-import fetchData from '../fuctions/fetch.js';
 import { convertUnixTimestamp } from '../utils/time/convert.js';
 import type ForestBot from '../structure/discord/Client';
-
-type User = {
-    username:  string,
-    kills:     number,
-    deaths:    number,
-    joins:     number,
-    leaves:    number,
-    lastseen:  string,
-    joindate:  string,
-    uuid:      string,
-    playtime:  number,
-    lastdeathString: string,
-    lastdeathTime:  number,
-    mc_server: string
-    error?:     string
-    Error?:    string
-}
-
-type msgCount = {
-    messagecount: number
-    Error?: string
-}
-
-type randomQuote = { 
-    message: string,
-    date: string
-    Error?: string
-}
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -57,32 +28,88 @@ export default {
 
         let userToSearch = interaction.options.getString("user")
 
-        let data = await fetchData(`${client.apiUrl}/user/${userToSearch}/${thisGuild.mc_server}`) as User;
-        let randomQuote = await fetchData(`${client.apiUrl}/quote/${userToSearch}/${thisGuild.mc_server}`) as randomQuote;
-        let msgCount = await fetchData(`${client.apiUrl}/messagecount/${userToSearch}/${thisGuild.mc_server}`) as msgCount;
+        const uuid = await client.API.convertUsernameToUuid(userToSearch);
+        const data = await client.API.getStatsByUuid(uuid, thisGuild.mc_server);
 
-        if (data.error || data.Error || msgCount.Error || randomQuote.Error) {
+
+        const calculateEngagementLevel = () => {
+
+            const joindate = data.joindate; // millisecond timestamp unix
+            const lastseen = data.lastseen; // millisecond timestamp unix
+            const playtime = data.playtime; // milliseconds
+            
+            // we need to check if joindate and lastseen can be converted to numbers, they are strings now.
+            // if they cant be converted to numbers, we will return a message saying that the user has not been seen yet.
+            // if they can be converted to numbers, we will continue with the calculation.
+            //check it with regex
+            if (!/^\d+$/.test(joindate) || !/^\d+$/.test(lastseen)) { 
+                return "User has not been seen yet.";
+            }
+
+            const jd = parseInt(joindate);
+            const ls = parseInt(lastseen);
+
+            const totalTimeSinceJoin = ls - jd; // Total time since they joined, in milliseconds
+            const playtimeInMs = playtime; // Convert playtime from seconds to milliseconds
+        
+            const engagementPercentage = (playtimeInMs / totalTimeSinceJoin) * 100;
+            return engagementPercentage.toFixed(2) + '%';
+        };
+        
+        let engageLvlString = ""
+
+        const engageLVl = calculateEngagementLevel()        
+        if (engageLVl === "User has not been seen yet.") {
+            engageLvlString = "Can't be calculated yet.";
+        } else {
+            engageLvlString = `${userToSearch} has been engaged ${engageLVl} of the time since they have joined the server`;
+        }
+
+        if (!uuid || !data) { 
             interaction.editReply({
                 content: `> Could not find user: **${userToSearch}**`,
             });
-            
+
             setTimeout(async () => {
                 await interaction.deleteReply();
             }, 10000);
-        
-            return;
-        }
-        
-        let lastdeath: string;
 
+            return
+        }
+
+
+        const quote = await client.API.getQuote(userToSearch, thisGuild.mc_server);
+        const msgCount = await client.API.getMessageCount(userToSearch, thisGuild.mc_server);
+        const lastKill = await client.API.getKills(uuid, thisGuild.mc_server, 1, "DESC");
+        const lastAdvancement = await client.API.getAdvancements(uuid, thisGuild.mc_server, 1, "DESC");
+        const totalAdvancements = await client.API.getTotalAdvancementsCount(uuid, thisGuild.mc_server);
+
+
+        let lastKillString: string;
+        let lastdeath: string;
+        let lastseenString: string;
+        let firstseenString: string;
+        let lastAdvancementString: string;
+
+        if (!lastAdvancement) { 
+            lastAdvancementString = "*No advancements recorded*";
+        }
+        else {
+            lastAdvancementString = `${lastAdvancement[0].advancement}, ${timeAgoStr(lastAdvancement[0].time)}`;
+        }
+
+        if (!lastKill) {
+            lastKillString = "*No kills recorded*";
+        } else {
+            lastKillString = `${lastKill[0].death_message}, ${timeAgoStr(lastKill[0].time)}`;
+        }
+
+        console.log(data)
         if (!data.lastdeathTime || !data.lastdeathString) { 
             lastdeath = "*Death not recorded*"
         } else {
             lastdeath = `${data.lastdeathString}, ${timeAgoStr(data.lastdeathTime)}`;
         }
-
-        let lastseenString: string;
-        let firstseenString: string;
 
         const digitTest = string => {
             if (/^\d+$/.test(string)) {
@@ -125,25 +152,37 @@ export default {
                     inline: false
                 },
                 {
+                    name: 'Last Kill',
+                    value: `${lastKillString}`,
+                    inline: false
+                },
+                {
+                    name: "Last Advancement",
+                    value: `${lastAdvancementString}`,
+                },
+                {
+                    name: "Total Advancements",
+                    value: `${totalAdvancements}`,
+                },
+                {
                     name: 'Joins / Leaves',
                     value: `${data.joins}`,
                 },
                 {
                     name: 'Random Quote',
-                    value: `${randomQuote.message}`,
+                    value: `${quote.message}`,
                 },
                 {
                     name: 'Message Count',
-                    value: `${msgCount.messagecount}`,
+                    value: `${msgCount.count}`,
                 },
                 {
                     name: 'Playtime',
                     value: `${dhms(data.playtime)}`,
                 },
                 {
-                    name: 'UUID',
-                    value: `${data.uuid}`,
-                    inline: false
+                    name: 'Engagement Level',
+                    value: `${engageLvlString}`,
                 },
                 {
                     name: '\u200b',
@@ -155,9 +194,6 @@ export default {
                 url: `https://mc-heads.net/player/${userToSearch}`
             },
             timestamp: new Date(),
-            footer: {
-                text: 'https://forestbot.org'
-            },
         }
 
         await interaction.editReply({

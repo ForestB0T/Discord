@@ -1,7 +1,8 @@
 import ForestBot from "../structure/discord/Client";
-import { api, color } from "../index.js";
+import { client, color } from "../index.js";
 import { CommandInteraction, Interaction, InteractionCollector, Message, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed } from 'discord.js';
 import { timeAgoStr } from "../utils/time/convert.js";
+import apiHandler from "../structure/api/forestapi";
 
 
 const pages = {} as { [key: string]: number }; // { userId: pageNumber }
@@ -35,12 +36,7 @@ async function createMessageEmbed(
     id: string
 ): Promise<MessageEmbed> {
     try {
-        const messages = await api.getMessages({
-            limit,
-            mc_server,
-            username,
-            type: "DESC",
-        });
+        const messages = await client.API.getMessages(username, mc_server, limit, "DESC");
 
         const embed = new MessageEmbed()
             .setColor(color.Blue)
@@ -83,7 +79,7 @@ export default {
     },
     run: async (
         interaction: CommandInteraction,
-        client: ForestBot,
+        client: apiHandler,
         thisGuild: Guild
     ) => {
         try {

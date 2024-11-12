@@ -86,6 +86,6 @@ export default async function commandHandler(interaction: CommandInteraction, cl
      * Everything checked out okay.
      * Running the command.
      */
-    return run(interaction, client, thisGuild);
+    return run(interaction, client, thisGuild, client.API);
 
 }

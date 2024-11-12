@@ -1,6 +1,5 @@
 import { CommandInteraction } from 'discord.js';
-import type ForestBot         from '../structure/discord/Client';
-import { color } from "../index.js";
+import type ForestBot from '../structure/discord/Client';
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -11,107 +10,163 @@ export default {
         description: "Get help on how to set me up",
         type: 1
     },
-    run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {   
-        
+    run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
         const helpEmbed = {
-            color: color.Green,
-            title: "Help on Commands and General Setup",
-            description: "Below are commands and setup instructions for using the bot.",
+            color: 0x4CAF50, // Soft green for a friendly look
+            title: '📜 Help - Command List',
+            description: 'Below are the commands you can use to interact with the bot. Each command includes its purpose and required parameters.',
             fields: [
                 {
-                    name: "__/setup__",
-                    value: "This command is used to set up the bot.\nExample: `/setup simplyvanilla`",
+                    name: '**Commands**',
+                    value: '\u200B',
+                    inline: false,
+                },
+
+                // /search command
+                {
+                    name: '🔍 **/search**',
+                    value: 'Query statistics about a specific user.',
                     inline: false,
                 },
                 {
-                    name: "Usage:",
-                    value: "/setup [mc server] [channel]",
+                    name: 'Usage',
+                    value: '`/search [user]`',
+                    inline: true,
+                },
+                {
+                    name: 'Parameters',
+                    value: [
+                        '**user** - The user to search for.\n',
+                        'Displays information such as playtime, join date, last seen, kills, deaths, and more.'
+                    ].join('\n'),
+                    inline: false,
+                },
+
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+
+                // /messages command
+                {
+                    name: '📨 **/messages**',
+                    value: 'Retrieve all messages from a specific user.',
                     inline: false,
                 },
                 {
-                    name: "Parameters:",
-                    value: "> **mc server** - the Minecraft server for bot usage\n> **channel** - the command channel (optional)",
+                    name: 'Usage',
+                    value: '`/messages [user]`',
+                    inline: true,
+                },
+                {
+                    name: 'Parameters',
+                    value: [
+                        '**user** - The user whose messages you want to retrieve.\n',
+                        'Displays the user’s message history with timestamps.'
+                    ].join('\n'),
+                    inline: false,
+                },
+
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+
+                // /setup command
+                {
+                    name: '⚙️ **/setup**',
+                    value: 'Configure the bot with an initial setup for your Minecraft server.',
                     inline: false,
                 },
                 {
-                    name: "\u200B",
-                    value: "\u200B",
+                    name: 'Usage',
+                    value: '`/setup [mc_server] (channel)`',
+                    inline: true,
+                },
+                {
+                    name: 'Parameters',
+                    value: [
+                        '**mc_server** - The Minecraft server to connect the bot to. (Required)\n',
+                        '**channel** - Optional Discord channel where bot commands are allowed.'
+                    ].join('\n'),
+                    inline: false,
+                },
+
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+
+                // /tablist command
+                {
+                    name: '📋 **/tablist**',
+                    value: 'Get the live tablist of the Minecraft server.',
                     inline: false,
                 },
                 {
-                    name: "__/livechat__",
-                    value: "Setup a livechat bridge or remove an existing one.",
+                    name: 'Usage',
+                    value: '`/tablist`',
+                    inline: true,
+                },
+                {
+                    name: 'Parameters',
+                    value: 'No parameters required.',
+                    inline: false,
+                },
+
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+
+                // /livechat command
+                {
+                    name: '💬 **/livechat**',
+                    value: 'Get a live chat feed of the Minecraft server in a Discord channel.',
                     inline: false,
                 },
                 {
-                    name: "Usage:",
-                    value: "/livechat add [mc server] [channel]\n/livechat remove [channel]",
-                    inline: false,
+                    name: 'Usage',
+                    value: '`/livechat [mc_server] (channel)`',
+                    inline: true,
                 },
                 {
-                    name: "Adding a Livechat:",
-                    value: "> **mc server** - the Minecraft server\n> **channel** - the livechat channel",
+                    name: 'Parameters',
+                    value: [
+                        '**mc_server** - The Minecraft server to get the chat feed from. (Required)\n',
+                        '**channel** - The Discord channel to post the live chat feed. (Required)'
+                    ].join('\n'),
                     inline: false,
                 },
+
                 {
-                    name: "Removing a Livechat:",
-                    value: "> **channel** - the channel to remove the livechat from\nNote: Livechats are limited to the servers the bot is in.",
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
+
                 {
-                    name: "\u200B",
-                    value: "\u200B",
-                    inline: false,
-                },
-                {
-                    name: "__/tablist__",
-                    value: "Get a live tablist of a Minecraft server.",
-                    inline: false,
-                },
-                {
-                    name: "Usage:",
-                    value: "/tablist",
-                    inline: false,
-                },
-                {
-                    name: "\u200B",
-                    value: "\u200B",
-                    inline: false,
-                },
-                {
-                    name: "__/search__",
-                    value: "Query statistics stored on a user.",
-                    inline: false,
-                },
-                {
-                    name: "Usage:",
-                    value: "/search [user]",
-                    inline: false,
-                },
-                {
-                    name: "Parameters:",
-                    value: "> **user** - the user to search for\nGets playtime, joindate, lastseen, kills, deaths, and more.",
-                    inline: false,
-                },
-                {
-                    name: "\u200B",
-                    value: "\u200B",
-                    inline: false,
-                },
-                {
-                    name: "__/messages__",
-                    value: "Get all messages from a user.",
+                    name: 'Additional Information',
+                    value: `ForestBot is a player ran Bot made on February 28th 2021, by Febzey. \n
+                        The bot is designed to track player statistics, messages, and anything else a regular user can see, some statistics may not be 100% accurate. \n
+                        ForestBot is able to be setup on any Minecraft server, and can be configured to post live chat messages to a Discord channel. \n
+                    `,
                     inline: false,
                 },
             ],
             timestamp: new Date(),
             footer: {
-                text: "Visit https://forestbot.org for more information.",
-            }
+                text: 'https://forestbot.org',
+                icon_url: 'https://forestbot.org/favicon.ico',
+            },
         };
-        
 
-        return interaction.reply({ embeds: [helpEmbed]})
+
+        return interaction.reply({ embeds: [helpEmbed] })
 
 
     }
