@@ -104,7 +104,6 @@ export default {
             lastKillString = `${lastKill[0].death_message}, ${timeAgoStr(lastKill[0].time)}`;
         }
 
-        console.log(data)
         if (!data.lastdeathTime || !data.lastdeathString) { 
             lastdeath = "*Death not recorded*"
         } else {
