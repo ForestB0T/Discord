@@ -17,7 +17,7 @@
     "discord-api-types": "^0.31.1",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
-    "forestbot-api-wrapper-v2": "^1.4.7",
+    "forestbot-api-wrapper-v2": "^1.4.8",
     "javascript-time-ago": "^2.3.13",
     "node-fetch": "^3.2.3",
     "ws": "^8.13.0"

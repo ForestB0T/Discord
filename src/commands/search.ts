@@ -31,6 +31,17 @@ export default {
         const uuid = await client.API.convertUsernameToUuid(userToSearch);
         const data = await client.API.getStatsByUuid(uuid, thisGuild.mc_server);
 
+        if (!uuid || !data) { 
+            interaction.editReply({
+                content: `> Could not find user: **${userToSearch}**`,
+            });
+
+            setTimeout(async () => {
+                await interaction.deleteReply();
+            }, 10000);
+
+            return
+        }
 
         const calculateEngagementLevel = () => {
 
@@ -64,19 +75,6 @@ export default {
         } else {
             engageLvlString = `${userToSearch} has been engaged ${engageLVl} of the time since they have joined the server`;
         }
-
-        if (!uuid || !data) { 
-            interaction.editReply({
-                content: `> Could not find user: **${userToSearch}**`,
-            });
-
-            setTimeout(async () => {
-                await interaction.deleteReply();
-            }, 10000);
-
-            return
-        }
-
 
         const quote = await client.API.getQuote(userToSearch, thisGuild.mc_server);
         const msgCount = await client.API.getMessageCount(userToSearch, thisGuild.mc_server);
