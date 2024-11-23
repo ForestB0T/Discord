@@ -149,6 +149,24 @@ export default {
                     inline: false,
                 },
 
+                
+                // /tablist command
+                {
+                    name: '📋 **/invite**',
+                    value: 'Get an invite link for ForestBot.',
+                    inline: false,
+                },
+                {
+                    name: 'Usage',
+                    value: '`/invite`',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+
                 {
                     name: 'Additional Information',
                     value: `ForestBot is a player ran Bot made on February 28th 2021, by Febzey. \n
