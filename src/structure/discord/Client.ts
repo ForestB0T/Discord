@@ -11,6 +11,15 @@ import type Options from "../config";
 import { ForestBotAPI, ForestBotAPIOptions } from "forestbot-api-wrapper-v2";
 import apiHandler from "../api/forestapi.js";
 
+let activities = [
+    { text: "Minecraft", type: "PLAYING" },
+    { text: "for commands", type: "WATCHING" },
+    { text: "for /help", type: "LISTENING" },
+    { text: "with the API", type: "PLAYING" },
+];
+
+let activityIndex = 0;
+
 export default class ForestBot extends Client {
 
     public API: apiHandler;
@@ -43,6 +52,14 @@ export default class ForestBot extends Client {
             await this.syncLiveChatChannelsCache();
             await this.handleEvents()
             await this.handleCommands()
+
+            this.user.setActivity("for commands", { type: "WATCHING" });
+            
+            setInterval(() => {
+                activityIndex = (activityIndex +1) % activities.length;
+                this.user.setActivity(activities[activityIndex].text, { type: activities[activityIndex].type as any });
+            },60000)
+      
         })
     }
 
