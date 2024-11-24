@@ -14,7 +14,7 @@ import apiHandler from "../api/forestapi.js";
 let activities = [
     { text: "Minecraft", type: "PLAYING" },
     { text: "for commands", type: "WATCHING" },
-    { text: "for /help", type: "LISTENING" },
+    { text: "/help", type: "LISTENING" },
     { text: "with the API", type: "PLAYING" },
 ];
 
