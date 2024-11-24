@@ -13,8 +13,8 @@ export default {
     
         await interaction.reply({
             content: `
-            > [ Bot Invite Link ](https://discord.com/oauth2/authorize?client_id=771280674602614825 )
-            > [ Discord Invite Link](https://discord.com/invite/2P8enrdY6t)  
+            > [ Bot Invite Link ](https://discord.com/oauth2/authorize?client_id=771280674602614825 ) \n
+            > [ Discord Invite Link ](https://discord.com/invite/2P8enrdY6t )  
             `,
         })
         return;
