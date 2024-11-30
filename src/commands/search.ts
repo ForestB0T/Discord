@@ -121,7 +121,7 @@ export default {
             color: color.gray,
             title: `${userToSearch}`,
             description: `Server: ${thisGuild.mc_server}`,
-            url: `https://namemc.com/profile/${userToSearch}.2`,
+            url: `https://forestbot.org/u/${userToSearch}/#`,
 
             thumbnail: {
                 url: `https://mc-heads.net/avatar/${userToSearch}/70`,
@@ -186,9 +186,14 @@ export default {
                     value: '\u200b',
                     inline: false,
                 },
+                
             ],
             image: {
                 url: `https://mc-heads.net/player/${userToSearch}`
+            },
+            footer: {
+              text: `https://forestbot.org/u/${userToSearch}`,
+
             },
             timestamp: new Date(),
         }
