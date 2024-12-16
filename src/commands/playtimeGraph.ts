@@ -38,6 +38,18 @@ export default {
         const uuid = await client.API.convertUsernameToUuid(user);
         const graphData = await fetch(`http://localhost:8001/player/playtime?uuid=${uuid}&date=${Date.now()}&server=${thisGuild.mc_server}&duration=${duration}`).then(res => res.json());
 
+        if (!graphData || !uuid) {
+            await interaction.editReply({
+                content: `> Could not find user: **${user}**`,
+            });
+
+            setTimeout(async () => {
+                await interaction.deleteReply();
+            }, 10000);
+
+            return;
+        }
+
         const graph = await createPlaytimeGraph(graphData);
 
         await interaction.editReply({
