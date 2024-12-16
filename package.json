@@ -24,9 +24,6 @@
     "forestbot-api-wrapper-v2": "^1.4.8",
     "javascript-time-ago": "^2.3.13",
     "node-fetch": "^3.2.3",
-    "plotly.js": "^2.35.3",
-    "puppeteer": "^23.10.4",
-    "scichart": "^3.5.708",
     "ws": "^8.13.0"
   }
 }
