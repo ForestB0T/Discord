@@ -50,8 +50,6 @@ export default {
 
         // Populate graphDataMap with provided playtime data
         graphData.forEach(day => {
-            console.log(day)
-
             totalPlaytime += day.playtime;
             if (day.playtime > maxPlaytime) {
                 maxPlaytime = day.playtime;
@@ -87,11 +85,6 @@ export default {
         }
             
         filledGraphData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-        console.log(filledGraphData);
-
-
-
         if (!graphData || !uuid) {
             await interaction.editReply({
                 content: `> Could not find user: **${user}**`,

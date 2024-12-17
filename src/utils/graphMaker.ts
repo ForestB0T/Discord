@@ -11,8 +11,6 @@ const createPlaytimeGraph = async (data: PlaytimeData[]) => {
     const height = 600; // Height of the image
     const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
 
-    console.log(data)
-
     // Prepare the data for the chart
     const labels = data.map(item => item.date);
     const playtimeData = data.map(item => item.playtime);
