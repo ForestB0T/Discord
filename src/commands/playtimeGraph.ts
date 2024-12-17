@@ -37,6 +37,60 @@ export default {
 
         const uuid = await client.API.convertUsernameToUuid(user);
         const graphData = await fetch(`http://localhost:8001/player/playtime?uuid=${uuid}&date=${Date.now()}&server=${thisGuild.mc_server}&duration=${duration}`).then(res => res.json());
+        const graphDataMap = new Map<string, number>();
+
+        //lets create up some other neat stats from this data
+        let totalPlaytime = 0;
+        let averagePlaytime = 0;
+        let maxPlaytime = 0;
+        let minPlaytime = Infinity;
+        let maxPlaytimeDate = "";
+        let minPlaytimeDate = "";
+
+
+        // Populate graphDataMap with provided playtime data
+        graphData.forEach(day => {
+            console.log(day)
+
+            totalPlaytime += day.playtime;
+            if (day.playtime > maxPlaytime) {
+                maxPlaytime = day.playtime;
+                maxPlaytimeDate = day.day;
+            }
+            if (day.playtime < minPlaytime) {
+                minPlaytime = day.playtime;
+                minPlaytimeDate = day.day;
+            }
+            totalPlaytime += day.playtime;
+            const formattedDate = new Date(day.day).toISOString().split('T')[0];
+            graphDataMap.set(formattedDate, day.playtime);
+        });
+
+        averagePlaytime = totalPlaytime / graphData.length;
+
+        const totalPlaytimeString = `${Math.floor(totalPlaytime / 60)} hours and ${Math.floor(totalPlaytime % 60)} minutes`;
+        const averagePlaytimeString = `${Math.floor(averagePlaytime / 60)} hours and ${Math.floor(averagePlaytime % 60)} minutes`;
+
+        
+        
+        // Fill in missing days with 0 playtime
+        const filledGraphData = [];
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - (duration === "1_week" ? 7 : 30));
+        
+        for (let d = startDate; d <= new Date(); d.setDate(d.getDate() + 1)) {
+            const dateStr = d.toISOString().split('T')[0];
+            filledGraphData.push({
+                date: dateStr,
+                playtime: graphDataMap.get(dateStr) || 0
+            });
+        }
+            
+        filledGraphData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        console.log(filledGraphData);
+
+
 
         if (!graphData || !uuid) {
             await interaction.editReply({
@@ -50,13 +104,21 @@ export default {
             return;
         }
 
-        const graph = await createPlaytimeGraph(graphData);
+        const graph = await createPlaytimeGraph(filledGraphData);
 
         await interaction.editReply({
             embeds: [
                 {
                     title: "📊 Playtime Graph",
-                    description: `**User:** ${user}\n**Duration:** ${duration.replace('_', ' ')}\n**Server:** ${thisGuild.mc_server}`,
+                    description: `
+                    **User:** ${user}
+                    **Duration:** ${duration.replace('_', ' ')}
+                    **Server:** ${thisGuild.mc_server}
+                    **Total Playtime** ${totalPlaytimeString}
+                    **Average Playtime** ${averagePlaytimeString}
+                    **Day with most playtime:** ${maxPlaytimeDate} with ${maxPlaytime} minutes
+                    **Day with least playtime:** ${minPlaytimeDate} with ${minPlaytime} minutes
+                    `,
                     color: 0x00AE86,
                     image: {
                         url: 'attachment://graph.png',  // Reference the file sent in the 'files' array
@@ -71,6 +133,6 @@ export default {
                 }
             ]
         });
-        
+
     }
 }
