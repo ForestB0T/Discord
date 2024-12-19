@@ -59,7 +59,6 @@ export default {
                 minPlaytime = day.playtime;
                 minPlaytimeDate = day.day;
             }
-            totalPlaytime += day.playtime;
             const formattedDate = new Date(day.day).toISOString().split('T')[0];
             graphDataMap.set(formattedDate, day.playtime);
         });
