@@ -14,7 +14,7 @@ export default {
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {   
     
         await interaction.deferReply();
-        await interaction.editReply(await makeTablistEmbed(thisGuild.mc_server, "refresh"));
+        await interaction.editReply(await makeTablistEmbed(thisGuild.mc_server.toLowerCase(), "refresh"));
         return;
 
     }
