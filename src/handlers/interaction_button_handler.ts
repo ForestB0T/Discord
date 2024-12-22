@@ -14,6 +14,6 @@ export default async function buttonHandler(interaction: Interaction, client: Fo
     }
 
     if (interaction["customId"] === "refresh" || interaction["customId"] === thisGuild.mc_server) {
-        return await interaction.update(await makeTablistEmbed(thisGuild.mc_server, "refresh"));
+        return await interaction.update(await makeTablistEmbed(thisGuild.mc_server.toLowerCase(), "refresh"));
     }
 };
