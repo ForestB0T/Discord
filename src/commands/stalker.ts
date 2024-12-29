@@ -48,6 +48,13 @@ export default {
             return
         }
 
+        if (userToAdd.toLowerCase() === "ra1ning") {
+            interaction.editReply({
+                content: `> You cannot watch this user.`
+            });
+            return;
+        }
+
         switch (choice) {
             case "add":
                 const ret = await addWatcher({

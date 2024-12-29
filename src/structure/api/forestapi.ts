@@ -42,17 +42,17 @@ export default class apiHandler extends ForestBotAPI {
         this.on("minecraft_player_join", async (data: MinecraftPlayerJoinMessage) => {
             client?.minecraftChatEmbed(`**${data.username}** joined the server.`, "Green", data.server);
 
-            const userIsBeingStalked = checkWatcherList(data.server, data.username);
-            console.log(userIsBeingStalked, "userIsBeingStalked")
-            if (!userIsBeingStalked) return;
+            const watchers = checkWatcherList(data.server, data.username);
+            if (!watchers) return;
+
+            for (const watcher of watchers) {
+                if (!watcher.discordUserToNotify) continue;
+                const userToNotify = await client?.users.fetch(watcher.discordUserToNotify);
+                if (!userToNotify) return;
+    
+                await watcherAlertEmbed(userToNotify, data.username, "joined the server", data.server, "green");
+            }
             
-            const userToNotify = await client?.users.fetch(userIsBeingStalked);
-            console.log(userToNotify, "userToNotify")
-            if (!userToNotify) return;
-
-            await watcherAlertEmbed(userToNotify, data.username, "joined the server", data.server, "green");
-
-            // lets check the stalker list.
         });
         this.on("minecraft_player_leave", (data: MinecraftPlayerLeaveMessage) => {
             client?.minecraftChatEmbed(`**${data.username}** left the server.`, "red", data.server);

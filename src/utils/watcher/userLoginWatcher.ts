@@ -4,8 +4,6 @@ import { writeFile } from "fs/promises";
 
 let userWatcherList: Watcher[] = await readFile("./extras/stalkers.json").then((data) => JSON.parse(data as any));
 
-console.log(userWatcherList, "userWatcherList")
-
 async function reloadWatcherList() {
     userWatcherList = await readFile("./extras/stalkers.json").then((data) => JSON.parse(data as any));
 }
@@ -22,9 +20,9 @@ async function addWatcher(watcher: Watcher) {
     await reloadWatcherList();
 }
 
-function checkWatcherList(mc_server: string, username: string): string | null {
-    const watcher = userWatcherList.find((watcher) => watcher.mc_server === mc_server && watcher.username === username);
-    return watcher ? watcher.discordUserToNotify : null;
+function checkWatcherList(mc_server: string, username: string): Watcher[] | null {
+    const watchers = userWatcherList.filter((watcher) => watcher.mc_server === mc_server && watcher.username === username);
+    return watchers || null;
 }
 
 function checkWatcherListByDiscordUser(discordUserToNotify: string): Watcher[] {
@@ -36,9 +34,8 @@ const discordJSColorConverter = (color: string) => {
         "red": 0xff4444, // Red
         "yellow": 0xffff44, // Yellow
         "green": 0x44ff44, // Green
-        // Add more mappings as needed
     };
-    return colorMap[color] || 0xff4444; // Default to red if color not found
+    return colorMap[color] || 0xff4444;
 }
 
 async function watcherAlertEmbed(user: User, username: string, action: string, mc_server: string, col: "red" | "yellow" | "green" = "red") {
@@ -47,17 +44,17 @@ async function watcherAlertEmbed(user: User, username: string, action: string, m
             {
                 title: "🔔 **User Watcher Alert**",
                 description: `**User:** \`${username}\`\n**Action:** \`${action}\` \n**Server:** \`${mc_server}\`\n**Time:** \`${new Date().toLocaleString()}\``,
-                color: discordJSColorConverter(col), // Convert color string to Discord color code
+                color: discordJSColorConverter(col), 
                 timestamp: new Date(),
                 footer: {
                     text: `User Watcher Alert`,
                 },
                 thumbnail: {
-                    url: `https://minotar.net/helm/${username}/100.png`, // User's avatar image
+                    url: `https://minotar.net/helm/${username}/100.png`,
                 },
                 fields: [
                     {
-                        name: "\u200B", // Invisible field for spacing
+                        name: "\u200B", 
                         value: "➖➖➖",
                         inline: false,
                     },
