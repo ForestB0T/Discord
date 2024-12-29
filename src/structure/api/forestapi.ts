@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import { cnf, client } from "../../index.js";
 import { ForestBotAPI, ForestBotAPIOptions, MinecraftAdvancementMessage, MinecraftChatMessage, MinecraftPlayerDeathMessage, MinecraftPlayerJoinMessage, MinecraftPlayerKillMessage, MinecraftPlayerLeaveMessage } from "forestbot-api-wrapper-v2";
+import { checkWatcherList, watcherAlertEmbed } from "../../utils/watcher/userLoginWatcher.js";
 
 
 type AddGuildArgs = DiscordGuild;
@@ -38,8 +39,20 @@ export default class apiHandler extends ForestBotAPI {
         this.on("minecraft_player_death", (data: MinecraftPlayerDeathMessage) => {
             client?.minecraftChatEmbed(data.death_message, "Indigo", data.mc_server);
         });
-        this.on("minecraft_player_join", (data: MinecraftPlayerJoinMessage) => {
+        this.on("minecraft_player_join", async (data: MinecraftPlayerJoinMessage) => {
             client?.minecraftChatEmbed(`**${data.username}** joined the server.`, "Green", data.server);
+
+            const userIsBeingStalked = checkWatcherList(data.server, data.username);
+            console.log(userIsBeingStalked, "userIsBeingStalked")
+            if (!userIsBeingStalked) return;
+            
+            const userToNotify = await client?.users.fetch(userIsBeingStalked);
+            console.log(userToNotify, "userToNotify")
+            if (!userToNotify) return;
+
+            await watcherAlertEmbed(userToNotify, data.username, "joined the server", "green");
+
+            // lets check the stalker list.
         });
         this.on("minecraft_player_leave", (data: MinecraftPlayerLeaveMessage) => {
             client?.minecraftChatEmbed(`**${data.username}** left the server.`, "red", data.server);

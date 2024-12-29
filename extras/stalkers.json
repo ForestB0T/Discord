@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "username": "SteveTheMiner",
+    "mc_server": "Skyblock_Haven",
+    "uuid": "abc123-def456-ghi789-jkl012",
+    "time": 1672531200000,
+    "discordUserToNotify": "DiscordUser123#4567"
+  },
+  {
+    "id": 2,
+    "username": "CreeperSlayer42",
+    "mc_server": "Hardcore_Realm",
+    "uuid": "mno345-pqr678-stu901-vwx234",
+    "time": 1704067200000,
+    "discordUserToNotify": "GamerGirl99#7890"
+  },
+  {
+    "id": 3,
+    "username": "DiamondHunter",
+    "mc_server": "Survival_Land",
+    "uuid": "xyz567-abc890-def123-ghi456",
+    "time": 1706745600000,
+    "discordUserToNotify": "ProMiner77#1234"
+  },
+  {
+    "username": "Furia",
+    "mc_server": "newtest_new",
+    "uuid": "ca2e3683-f872-4834-8cdb-97eb752ba9ec",
+    "time": 1735504065160,
+    "discordUserToNotify": "703044116019281963"
+  }
+]

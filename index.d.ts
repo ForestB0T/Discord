@@ -40,6 +40,15 @@ interface GetUserAdvancementsArgs {
     type: "DESC"|"ASC"
 }
 
+interface Watcher {
+    id?: number,
+    username: string,
+    mc_server: string,
+    uuid: string,
+    time: number,
+    discordUserToNotify: string,
+}
+
 interface UserAdvancementRow {
     advancements: [
         {
