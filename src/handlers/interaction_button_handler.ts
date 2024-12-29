@@ -7,13 +7,15 @@ export default async function buttonHandler(interaction: Interaction, client: Fo
     const thisGuild = client.cachedGuilds.get(interaction.guild.id);
 
     if (!thisGuild) {
-        return interaction.reply({
+        await interaction.deferReply({ ephemeral: true });
+        return interaction.followUp({
             content: "> I am not setup yet.",
             ephemeral: true
-        })
+        });
     }
 
     if (interaction["customId"] === "refresh" || interaction["customId"] === thisGuild.mc_server) {
-        return await interaction.update(await makeTablistEmbed(thisGuild.mc_server.toLowerCase(), "refresh"));
+        await interaction.deferUpdate();
+        return await interaction.editReply(await makeTablistEmbed(thisGuild.mc_server.toLowerCase(), "refresh"));
     }
 };

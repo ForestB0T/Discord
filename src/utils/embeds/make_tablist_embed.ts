@@ -13,7 +13,6 @@ const makeTablistEmbed = async (mc_server: string, custom_id: string) => {
         }
     }
 
-    
     const imageDataArrayBuffer = await response.arrayBuffer();
     const imageDataBuffer = Buffer.from(imageDataArrayBuffer);
     const att = new MessageAttachment(imageDataBuffer, "tablist.png")
