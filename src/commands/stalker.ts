@@ -68,7 +68,7 @@ export default {
                     content: `> Added **${userToAdd}** to the watcher list.`
                 });
 
-                watcherAlertEmbed(interaction.user, userToAdd, "added to your watcher list", "yellow");
+                watcherAlertEmbed(interaction.user, userToAdd, "added to your watcher list", thisGuild.mc_server, "yellow");
                 break;
 
             case "remove":

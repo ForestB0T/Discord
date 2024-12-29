@@ -50,7 +50,7 @@ export default class apiHandler extends ForestBotAPI {
             console.log(userToNotify, "userToNotify")
             if (!userToNotify) return;
 
-            await watcherAlertEmbed(userToNotify, data.username, "joined the server", "green");
+            await watcherAlertEmbed(userToNotify, data.username, "joined the server", data.server, "green");
 
             // lets check the stalker list.
         });

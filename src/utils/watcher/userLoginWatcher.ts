@@ -41,12 +41,12 @@ const discordJSColorConverter = (color: string) => {
     return colorMap[color] || 0xff4444; // Default to red if color not found
 }
 
-async function watcherAlertEmbed(user: User, username: string, action: string, col: "red" | "yellow" | "green" = "red") {
+async function watcherAlertEmbed(user: User, username: string, action: string, mc_server: string, col: "red" | "yellow" | "green" = "red") {
     const embed = {
         embeds: [
             {
                 title: "🔔 **User Watcher Alert**",
-                description: `**User:** \`${username}\`\n**Action:** \`${action}\` \n**Time:** \`${new Date().toLocaleString()}\``,
+                description: `**User:** \`${username}\`\n**Action:** \`${action}\` \n**Server:** \`${mc_server}\`\n**Time:** \`${new Date().toLocaleString()}\``,
                 color: discordJSColorConverter(col), // Convert color string to Discord color code
                 timestamp: new Date(),
                 footer: {
