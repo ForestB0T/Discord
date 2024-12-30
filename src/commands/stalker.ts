@@ -59,7 +59,7 @@ export default {
             case "add":
                 const ret = await addWatcher({
                     username: userToAdd,
-                    mc_server: thisGuild.mc_server,
+                    mc_server: thisGuild.mc_server.toLowerCase(),
                     uuid: uuid,
                     time: Date.now(),
                     discordUserToNotify: interaction.user.id
@@ -96,7 +96,7 @@ export default {
                     return;
                 }
 
-                await deleteWatcher(interaction.user.id, thisGuild.mc_server, userToAdd);
+                await deleteWatcher(interaction.user.id, thisGuild.mc_server.toLowerCase(), userToAdd);
                 interaction.editReply({
                     content: `> Removed **${userToAdd}** from your watcher list.`
                 });

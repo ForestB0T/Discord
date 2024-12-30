@@ -42,7 +42,7 @@ export default class apiHandler extends ForestBotAPI {
         this.on("minecraft_player_join", async (data: MinecraftPlayerJoinMessage) => {
             client?.minecraftChatEmbed(`**${data.username}** joined the server.`, "Green", data.server);
 
-            const watchers = checkWatcherList(data.server, data.username);
+            const watchers = checkWatcherList(data.server.toLowerCase(), data.username);
             if (!watchers) return;
 
             for (const watcher of watchers) {

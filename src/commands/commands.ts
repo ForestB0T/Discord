@@ -34,7 +34,7 @@ export default {
                 },
                 {
                     name: "Utility Commands",
-                    value: "!advancements\n!lastadvancement\n!lastseen\n!sleep\n!top",
+                    value: "!advancements\n!lastadvancement\n!lastseen\n!sleep\n!top\n!oldnames\n!realname",
                     inline: false
                 },
                 {
@@ -71,6 +71,8 @@ export default {
                         "Displays the last time a user was seen online. Usage: `!lastseen <username>`\n" +
                         "Put the bot to sleep. Usage: `!sleep`\n" +
                         "Shows the top players for a specific stat. Usage: `!top <kills/deaths/joins/playtime>`\n\n" +
+                        "Shows the old names of a user. Usage: `!oldnames <username>`\n" +
+                        "Shows the real name of a user. Usage: `!realname <username>`\n\n" +
 
                         "Retrieves a random quote from a user. Usage: `!quote <username>`\n" +
                         "Use `!mount` to mount the nearest boat.\n" +
