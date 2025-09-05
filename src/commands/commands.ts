@@ -1,5 +1,10 @@
-import { CommandInteraction } from 'discord.js';
-import type ForestBot from '../structure/discord/Client';
+import {
+    CommandInteraction,
+    MessageActionRow,
+    MessageButton
+} from "discord.js";
+import type ForestBot from "../structure/discord/Client";
+import type { Guild } from "discord.js";
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -11,82 +16,62 @@ export default {
         type: 1
     },
     run: async (interaction: CommandInteraction, client: ForestBot, thisGuild: Guild) => {
+        const commandsText = `
+## 📜 ForestBot In-Game Commands
 
-        const commandsEmbed = {
-            color: 0x4CAF50, // Soft green for a friendly look
-            title: '📜 In-game Command list.',
-            description: 'Below are the commands you can use to interact with the bot. Each command includes its purpose and required parameters.',
-            fields: [
-                {
-                    name: "General Commands",
-                    value: "!addfaq\n!coords\n!discord\n!faq\n!help\n!iam",
-                    inline: false
-                },
-                {
-                    name: "Player Stats Commands",
-                    value: "!joindate\n!joins\n!kd\n!playtime\n!lastkill\n!lastdeath",
-                    inline: false
-                },
-                {
-                    name: "Chat and Messaging Commands",
-                    value: "!firstmessage\n!offlinemsg\n!lastmessage\n!msgcount\n!wordcount",
-                    inline: false
-                },
-                {
-                    name: "Utility Commands",
-                    value: "!advancements\n!lastadvancement\n!lastseen\n!sleep\n!top\n!oldnames\n!realname",
-                    inline: false
-                },
-                {
-                    name: "Fun Commands",
-                    value: "!quote\n!mount\n!whois",
-                    inline: false
-                },
-                {
-                    name: "Command Descriptions",
-                    value: "Adds a new FAQ entry. Usage: `!addfaq <text>`\n" +
-                        "Use `!coords` to get the coordinates of the bot.\n" +
-                        "Shares the Discord server invite link. Usage: `!discord`\n" +
-                        "Retrieves a FAQ entry by ID. Usage: `!faq <id>`\n" +
-                        "Use `!help` to get the help message.\n" +
-                        "Use `!iam` to set your `!whois` description.\n\n" +
+### ⚡ General
+\`!addfaq <text>\` — Add a new FAQ  
+\`!coords\` — Get the bot’s coordinates  
+\`!discord\` — Show the Discord invite  
+\`!faq <id>\` — Retrieve a FAQ entry  
+\`!help\` — Show help  
+\`!iam <text>\` — Set your whois description  
 
-                        "Retrieves the join date of a user. Usage: `!joindate <username>`\n" +
-                        "Shows the number of times a user has joined. Usage: `!joins <username>`\n" +
-                        "Displays the kill/death ratio of a user. Usage: `!kd <username>`\n" +
-                        "Retrieves the total playtime of a user. Usage: `!playtime <username>`\n" +
-                        "Retrieves the last kill a user got. Usage: `!lastkill <username>`\n" +
-                        "Retrieves the last death of a user. Usage: `!lastdeath <username>`\n\n"
-                },
-                {
-                    name: " ",
-                    value: "Retrieves the first message of a user. Usage: `!firstmessage <username>`\n" +
-                        "Send a message to a user who is offline. Usage: `!offlinemsg <username> <text>`\n" +
-                        "Retrieves the last message of a user. Usage: `!lastmessage <username>`\n" +
-                        "Retrieves the number of messages a user has sent. Usage: `!msgcount <username>`\n" +
-                        "Shows how many times a user has said a word. Usage: `!wordcount <username> <word>`\n\n" +
+### 📊 Player Stats
+\`!joindate <user>\` — Get join date  
+\`!joins <user>\` — Number of joins  
+\`!kd <user>\` — Kill/Death ratio  
+\`!playtime <user>\` — Total playtime  
+\`!lastkill <user>\` — Last kill  
+\`!lastdeath <user>\` — Last death  
 
-                        "Retrieves the number of advancements a user has. Usage: `!advancements <username>`\n" +
-                        "Retrieves the most recent advancement of a user. Usage: `!lastadvancement <username>`\n" +
-                        "Displays the last time a user was seen online. Usage: `!lastseen <username>`\n" +
-                        "Put the bot to sleep. Usage: `!sleep`\n" +
-                        "Shows the top players for a specific stat. Usage: `!top <kills/deaths/joins/playtime>`\n\n" +
-                        "Shows the old names of a user. Usage: `!oldnames <username>`\n" +
-                        "Shows the real name of a user. Usage: `!realname <username>`\n\n" +
+### 💬 Chat & Messaging
+\`!firstmessage <user>\` — First message  
+\`!offlinemsg <user> <text>\` — Send offline message  
+\`!lastmessage <user>\` — Last message  
+\`!msgcount <user>\` — Message count  
+\`!wordcount <user> <word>\` — Word usage count  
 
-                        "Retrieves a random quote from a user. Usage: `!quote <username>`\n" +
-                        "Use `!mount` to mount the nearest boat.\n" +
-                        "Shows the description of a user. Usage: `!whois <username>`"
-                }
-            ],
-            footer: {
-                text: "Use these commands in-game to interact with the bot!"
-            }
-        }
+### 🛠 Utility
+\`!advancements <user>\` — Advancement count  
+\`!lastadvancement <user>\` — Latest advancement  
+\`!lastseen <user>\` — Last seen time  
+\`!sleep\` — Put the bot to sleep  
+\`!top <stat>\` — Leaderboard (kills, deaths, joins, playtime)  
+\`!oldnames <user>\` — Previous usernames  
+\`!realname <user>\` — Real username  
 
+### 🎉 Fun
+\`!quote <user>\` — Random quote  
+\`!mount\` — Mount nearest boat  
+\`!whois <user>\` — Show user description
+        `;
 
-        return interaction.reply({ embeds: [commandsEmbed] })
+        const row = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setLabel("🌐 Website")
+                .setStyle("LINK")
+                .setURL("https://forestbot.org"),
+            new MessageButton()
+                .setLabel("➕ Invite")
+                .setStyle("LINK")
+                .setURL("https://discord.com/oauth2/authorize?client_id=771280674602614825&scope=bot%20applications.commands&permissions=0")
+        );
 
-
+        return interaction.reply({
+            content: commandsText,
+            components: [row],
+            ephemeral: true
+        });
     }
-}
+};

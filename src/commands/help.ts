@@ -1,5 +1,8 @@
-import { CommandInteraction } from 'discord.js';
-import type ForestBot from '../structure/discord/Client';
+import {
+    CommandInteraction,
+    MessageActionRow,
+    MessageButton
+} from "discord.js";
 
 export default {
     permissions: "SEND_MESSAGES",
@@ -11,59 +14,35 @@ export default {
         type: 1
     },
     run: async (interaction: CommandInteraction) => {
-        const helpEmbed = {
-            color: 0x4CAF50, // Soft green for a friendly look
-            title: '📜 Help - Command List',
-            description: 'Commands you can use to interact with the bot:',
-            fields: [
-                {
-                    name: '🔍 **/search [user]**',
-                    value: 'Query statistics about a specific user.',
-                    inline: false,
-                },
-                {
-                    name: '📨 **/messages [user]**',
-                    value: 'Retrieve all messages from a specific user.',
-                    inline: false,
-                },
-                {
-                    name: '⚙️ **/setup [mc_server] (channel)**',
-                    value: 'Configure the bot with an initial setup for your Minecraft server.',
-                    inline: false,
-                },
-                {
-                    name: '📋 **/tablist**',
-                    value: 'Get the live tablist of the Minecraft server.',
-                    inline: false,
-                },
-                {
-                    name: '💬 **/livechat [mc_server] (channel)**',
-                    value: 'Get a live chat feed of the Minecraft server in a Discord channel.',
-                    inline: false,
-                },
-                {
-                    name: '📋 **/invite**',
-                    value: 'Get an invite link for ForestBot.',
-                    inline: false,
-                },
-                {
-                    name: '👀 **/watcher add|remove <user>**',
-                    value: 'Notify you when a user joins the server.',
-                    inline: false,
-                },
-                {
-                    name: '📊 **/playtimegraph [user]**',
-                    value: 'Generate a playtime graph for a specific user.',
-                    inline: false,
-                },
-            ],
-            timestamp: new Date(),
-            footer: {
-                text: 'https://forestbot.org',
-                icon_url: 'https://forestbot.org/favicon.ico',
-            },
-        };
+        const helpText = `
+## 📜 ForestBot Help
+Here are the commands you can use:
 
-        return interaction.reply({ embeds: [helpEmbed] });
+🔍 **/search [user]** – Query statistics about a specific user  
+📨 **/messages [user]** – Retrieve all messages from a specific user  
+⚙️ **/setup [mc_server] (channel)** – Configure the bot for your server  
+📋 **/tablist** – Get the live tablist of the Minecraft server  
+💬 **/livechat [mc_server] (channel)** – Stream server chat into a channel  
+📋 **/invite** – Invite ForestBot to another server  
+👀 **/watcher add|remove <user>** – Get notified when a user joins  
+📊 **/playtimegraph [user]** – Generate a playtime graph
+        `;
+
+        const row = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setLabel("🌐 Website")
+                .setStyle("LINK")
+                .setURL("https://forestbot.org"),
+            new MessageButton()
+                .setLabel("➕ Invite")
+                .setStyle("LINK")
+                .setURL("https://discord.com/oauth2/authorize?client_id=771280674602614825&scope=bot%20applications.commands&permissions=0")
+        );
+
+        return interaction.reply({
+            content: helpText,
+            components: [row],
+            ephemeral: true // only visible to the user
+        });
     }
-}
+};
